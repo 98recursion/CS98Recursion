@@ -1,0 +1,2 @@
+- better way to embed code in lecture notes
+- instead of copy and pasting code - instead of link

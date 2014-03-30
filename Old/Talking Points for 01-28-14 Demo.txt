@@ -1,0 +1,10 @@
+Idea:
+
+-split screen into 4 panes: code, visualization, comments/lecture, and stack frame + quizzes while running through solution code
+
+-c
+
+Module:
+
+- reuse interface for multiple examples (progress through labs in a linear fashion that gradually introduces new ideas)
+- Some of them will be redundant in concept (like factorial and string recursion) in order to drill home ideas

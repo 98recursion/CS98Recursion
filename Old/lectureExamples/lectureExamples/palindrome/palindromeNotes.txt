@@ -1,0 +1,29 @@
+Palindrome Checking
+
+A palindrome is a word, phrase, number, or other sequence of symbols or elements,
+that can be interpreted the same way in either forward or reverse direction.
+
+Here are some examples: "1234321", "detartrated", "as", "hi", "I"
+
+So, if we start with an empty string or a single character and we
+add any character to both sides we'll still have a palindrome.
+
+""
+"nn"
+"anna"
+
+or
+
+"e"
+"cec"
+"aceca"
+"racecar"
+
+We could determine if some text is a palindrome iteratively but there is a nice recursive solution.
+Recursively we can break the text into smaller and smaller pieces opposite of how we built palindromes up earlier.
+
+1. If the text is empty or a single character, you've got a palindrome.
+2. If the first and last characters of the text are the same, recursively test the rest of the text.
+3. If they aren't, the text isn't a palindrome.
+
+[CODE GOES HERE]
