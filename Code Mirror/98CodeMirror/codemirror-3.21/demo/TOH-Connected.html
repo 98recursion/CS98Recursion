@@ -65,7 +65,6 @@ solve_hanoi(3, 1, 3);
 </div>
 <p><button type=button onclick="run()">run</button></p>
 
-
 	<script type = "text/javascript" >
   
 	// convenience function to get the id attribute of generated sketch html element
@@ -83,7 +82,7 @@ solve_hanoi(3, 1, 3);
   		});
 
   		var processingInstance;
-
+		
   		function move_disc(disc_number, from_peg, to_peg) {
   			if (!processingInstance) {
   				processingInstance = Processing.getInstanceById('sketch');
@@ -93,6 +92,19 @@ solve_hanoi(3, 1, 3);
 
   		}
 		
+		function increaseTotalDiscs() {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+  			processingInstance.increaseTotalDiscs();
+		}
+
+		function decreaseTotalDiscs() {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+  			processingInstance.decreaseTotalDiscs();
+		}
 	 
 		function run(){
 		var content = editor.getValue();		
@@ -145,7 +157,6 @@ solve_hanoi(3, 1, 3);
 		console.error("Caught[via window.onerror]: '" + msg + "' from " + url + ":" + line);
 		return true; // same as preventDefault
 		};
-		
 	}
 	  
   	</script>
@@ -171,7 +182,7 @@ solve_hanoi(3, 1, 3);
 		width: 50%; letter-spacing: 0.1em;
 		margin-bottom: 1em; font-size: 1.65em;
 	}
-	canvas { 
+	canvas {
 		display: block; 
 		outline: 0px; 
 		margin-bottom: 1em; 
@@ -195,6 +206,10 @@ solve_hanoi(3, 1, 3);
 	<body>
 		<div id="content">
 			<div>
+			<p>
+				<button type=button onclick="decreaseTotalDiscs()">-</button>
+				<button type=button onclick="increaseTotalDiscs()">+</button>
+			</p>
 				<canvas id="sketch" data-processing-sources="toh.pde" 
 						width="650" height="300">
 					<p>Your browser does not support the canvas tag.</p>
@@ -208,5 +223,4 @@ solve_hanoi(3, 1, 3);
     		</div>
 	</body>
 
-  
 </html>
