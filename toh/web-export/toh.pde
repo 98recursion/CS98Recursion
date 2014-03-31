@@ -20,6 +20,7 @@ int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
 long wait;
+boolean pause = false;
 /*Button b;
 ArrayList<Button> blist = new ArrayList<Button>();*/
 
@@ -113,7 +114,7 @@ void setup() {
 
 void draw() {
 
-  if (!queue.isEmpty()) {
+  if (!queue.isEmpty() && !pause) {
     animate(queue);
   }
   fill(128, 128, 128); //background green
@@ -174,7 +175,7 @@ void keyPressed() {
 
       if (key == 't' || key == 'T') {
       setTotalDiscs(total_discs);
-      solve_hanoi(total_discs, 1, 3, millis());
+      solve_hanoi(total_discs, 1, 3);
     }
     else if ((key == 'r' || key == 'R') ) {
       setTotalDiscs(total_discs);
@@ -484,6 +485,10 @@ void move_disc(int n, int from, int to) {
   m.to = to;
   queue.add(m);
 }
+
+void pause_animation(){
+ pause = !pause; 
+}
 //solve_hanoi(3, 1, 3);
 
 class Move{
@@ -530,9 +535,4 @@ class Button {
   }
 }
 
-class Move{
-  int n;
-  int to;
-  int from;
-}
 
