@@ -1,5 +1,0 @@
-Hi, I'm Derek.
-
-I'm a CS modified with Neuroscience major (like Michelle, I was late to discover the joys of computer science!). In the spring, I worked at the Max Planck Institute for Neurobiology, using Matlab to model neural activity, and over the summer, I worked at the Wharton School where I used Python to develop an NLP application. 
-
-Aside from academic and professional interests though, I like to hike, listen to minimalist techno music and classical piano, and talk about free will (or lack thereof).

@@ -1,8 +1,0 @@
-towers of hanoi
-factorial (tail-recursion too)
-removing vowels from a string
-counting the frequency of a character is a string
-summation
-recursive backtracking: n-queens, map coloring, sudoku
-binary search
-palindrome checking
