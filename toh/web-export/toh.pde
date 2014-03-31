@@ -19,7 +19,9 @@ Disc inHand = null;
 int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
-
+long wait;
+/*Button b;
+ArrayList<Button> blist = new ArrayList<Button>();*/
 
 //int savedTime, totalTime;
 //boolean solved = false; /////////////////TEMP 
@@ -97,9 +99,23 @@ void setup() {
   setTotalDiscs(3); //best between 3 and 10 
 
   MAX_DISCS = 10;
+
+  wait = 1000;
+
+  int c = color(255, 255, 255);
+
+  /*
+  blist.add(new Button(c, 70, 10, 100, 40, "Reset"));
+   blist.add(new Button(c, 190, 10, 100, 40, "Solve"));
+   blist.add(new Button(c, 310, 10, 100, 40, "+"));
+   blist.add(new Button(c, 430, 10, 100, 40, "-"));*/
 }
 
 void draw() {
+
+  if (!queue.isEmpty()) {
+    animate(queue);
+  }
   fill(128, 128, 128); //background green
   noStroke();
   rect(0, 0, width, height); //background
@@ -123,9 +139,9 @@ void draw() {
     inHand.draw();
   }
 
-  if (!queue.isEmpty()) {
-    animate(queue);
-  }
+  /* for ( Button b : blist ) {
+   b.draw();
+   } */
   //grid(); //TEMP
 }
 
@@ -136,10 +152,9 @@ void animate(ArrayList<Move> queue) {
   int to = m.to;
   int from = m.from;
   long start = millis();
-  long wait = 1000;
   while ( millis () - start < wait ) {
   }
-  move_disc(n, from, to);
+  draw_disc(n, from, to);
 }
 
 //colors green if inHand is legal addition to peg it is over, else red
@@ -423,7 +438,7 @@ class Peg {
 //disc_number not found on from_peg, 
 //disc_number not top-most disc on from_peg
 //disc push !(isLegalAddition), cannot push legally
-void move_disc(int disc_number, int from_peg, int to_peg) {
+void draw_disc(int disc_number, int from_peg, int to_peg) {
 
   // int passedTime = millis() - savedTime;
   // if (passedTime > totalTime) {
@@ -437,14 +452,14 @@ void move_disc(int disc_number, int from_peg, int to_peg) {
   //   savedTime = millis();
   //  }
 }
-void solve_hanoi(int n, int start_peg, int end_peg, long lastTime) {
+void solve_hanoi(int n, int start_peg, int end_peg) {
 
   // the peg that's not the start or end peg
   int spare_peg;
 
   // base case where there's only one disk
   if (n == 1) { 
-    queue_disc(n, start_peg, end_peg);
+    move_disc(n, start_peg, end_peg);
   }
 
   // recursive case where there's more than one disk
@@ -453,16 +468,16 @@ void solve_hanoi(int n, int start_peg, int end_peg, long lastTime) {
     spare_peg = 6 - start_peg - end_peg;
 
     // move all the disks except the bottom one to the spare peg
-    solve_hanoi(n - 1, start_peg, spare_peg, millis());
+    solve_hanoi(n - 1, start_peg, spare_peg);
 
     // move the bottom disk from the start peg to the end peg
-    queue_disc(n, start_peg, end_peg);
+    move_disc(n, start_peg, end_peg);
     // solve one disk smaller problem of moving the remaining disks, which are on the spare peg, to the end peg
-    solve_hanoi(n - 1, spare_peg, end_peg, millis());
+    solve_hanoi(n - 1, spare_peg, end_peg);
   }
 }  
 
-void queue_disc(int n, int from, int to) {
+void move_disc(int n, int from, int to) {
   Move m = new Move();
   m.n = n;
   m.from = from;
@@ -470,6 +485,50 @@ void queue_disc(int n, int from, int to) {
   queue.add(m);
 }
 //solve_hanoi(3, 1, 3);
+
+class Move{
+  int n;
+  int to;
+  int from;
+}
+//In case we need a button class
+
+class Button {
+
+  color storedColor;
+  int x;
+  int y;
+  int w;
+  int h;
+  String title;
+
+  Button(color i, int bx, int by, int bw, int bh, String t) {
+    storedColor = i;
+    x = bx;
+    y = by;
+    w = bw;
+    h = bh;
+    title = t;
+  }
+
+  void draw() {
+    fill(storedColor);
+    rect(x, y, w, h);
+    if ( title != null ) {
+      fill(color(0, 0, 0));
+     text(title, x, y, w, h); 
+    }
+  }
+
+  boolean contains(int mx, int my) {
+    if ( mx > x && mx < x + w ) {
+      if ( my > y && my < y + h ) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
 
 class Move{
   int n;

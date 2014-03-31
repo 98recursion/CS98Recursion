@@ -20,7 +20,8 @@ int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
 long wait;
-
+/*Button b;
+ArrayList<Button> blist = new ArrayList<Button>();*/
 
 //int savedTime, totalTime;
 //boolean solved = false; /////////////////TEMP 
@@ -98,8 +99,16 @@ void setup() {
   setTotalDiscs(3); //best between 3 and 10 
 
   MAX_DISCS = 10;
-  
+
   wait = 1000;
+
+  int c = color(255, 255, 255);
+
+  /*
+  blist.add(new Button(c, 70, 10, 100, 40, "Reset"));
+   blist.add(new Button(c, 190, 10, 100, 40, "Solve"));
+   blist.add(new Button(c, 310, 10, 100, 40, "+"));
+   blist.add(new Button(c, 430, 10, 100, 40, "-"));*/
 }
 
 void draw() {
@@ -129,6 +138,10 @@ void draw() {
     fill(inHandColor()); 
     inHand.draw();
   }
+
+  /* for ( Button b : blist ) {
+   b.draw();
+   } */
   //grid(); //TEMP
 }
 
@@ -439,7 +452,7 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
   //   savedTime = millis();
   //  }
 }
-void solve_hanoi(int n, int start_peg, int end_peg, long lastTime) {
+void solve_hanoi(int n, int start_peg, int end_peg) {
 
   // the peg that's not the start or end peg
   int spare_peg;
@@ -455,12 +468,12 @@ void solve_hanoi(int n, int start_peg, int end_peg, long lastTime) {
     spare_peg = 6 - start_peg - end_peg;
 
     // move all the disks except the bottom one to the spare peg
-    solve_hanoi(n - 1, start_peg, spare_peg, millis());
+    solve_hanoi(n - 1, start_peg, spare_peg);
 
     // move the bottom disk from the start peg to the end peg
     move_disc(n, start_peg, end_peg);
     // solve one disk smaller problem of moving the remaining disks, which are on the spare peg, to the end peg
-    solve_hanoi(n - 1, spare_peg, end_peg, millis());
+    solve_hanoi(n - 1, spare_peg, end_peg);
   }
 }  
 
@@ -473,3 +486,8 @@ void move_disc(int n, int from, int to) {
 }
 //solve_hanoi(3, 1, 3);
 
+class Move{
+  int n;
+  int to;
+  int from;
+}
