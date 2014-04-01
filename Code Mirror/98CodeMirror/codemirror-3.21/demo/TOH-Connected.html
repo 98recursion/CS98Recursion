@@ -63,13 +63,10 @@ function solve_hanoi(n, start_peg, end_peg) {
 solve_hanoi(3, 1, 3);
 </textarea>
 </div>
-<p><button type=button onclick="run()">run</button></p>
+
 
 	<script type = "text/javascript" >
-  
-	// convenience function to get the id attribute of generated sketch html element
-		// var processingInstance = function getProcessingSketchId () { return 'sketch'; }
-		
+  		
   		var editor = CodeMirror.fromTextArea(document.getElementById("codeInputPane"), {
   		//mode: "javascript",
   		theme: "neat",
@@ -89,7 +86,6 @@ solve_hanoi(3, 1, 3);
   			}
 
   			processingInstance.move_disc(disc_number, from_peg, to_peg);
-
   		}
 		
 		function increaseTotalDiscs() {
@@ -106,39 +102,53 @@ solve_hanoi(3, 1, 3);
   			processingInstance.decreaseTotalDiscs();
 		}
 	 
+		function clearInput(){
+			clearOutput();	
+			editor.setValue("");
+			editor.clearHistory();
+			editor.clearGutter("gutterId"); //if you have gutters
+		}
+		
+		function clearOutput(){
+			document.getElementById('demo').innerHTML = "";		
+		}
+	 
 		function run(){
 		var content = editor.getValue();		
 		var result = eval(content);
-		var logOfConsole = [];
-
-		var _log = console.log,
-		_warn = console.warn,
-		_error = console.error;
-
-		function outputArguments(arguments, type)
-		{
-		outputBox = document.getElementById('demo');
+		//printResult();
+		}
+		
+		function outputArguments(arguments, type){
+		var outputBox = document.getElementById('demo');
 		for(i in arguments)
-			{
+				{
 			if(type == 0)
-			{
-			outputBox.innerHTML += '<p class="consoleLog">'+(arguments[i])+'</p>';
-			}
+				{
+			outputBox.innerHTML +=(arguments[i]+ '\n');
+				}
 			else if (type == 1)
-			{
-			outputBox.innerHTML += '<p class="consoleWarn">'+(arguments[i])+'</p>';	
-			}
+				{
+			outputBox.innerHTML +=(arguments[i] + '\n');	
+				}
 			else
-			{
-			outputBox.innerHTML += '<p class="consoleError">'+(arguments[i])+'</p>';
+				{
+			outputBox.innerHTML +=(arguments[i] + '\n');
+				}
 			}
 		}
-	}
+		
+		function printResult(){
+			var logOfConsole = [];
+			var _log = console.log,
+			_warn = console.warn,
+			_error = console.error;
+
+	
 
 	console.log = function() {
 		outputArguments(arguments, 0);
-		logOfConsole.push({method: 'log', arguments:arguments});
-		return _log.apply(console, arguments);
+		return true;
 	};
 
 	console.warn = function() {
@@ -161,8 +171,12 @@ solve_hanoi(3, 1, 3);
 	  
   	</script>
 	
-	<div id="demo"  style="width:10;height:10;overflow-y:scroll" >
+	<div>
+	<textarea id="demo"  style="width:605px; height:140px; overflow-y:scroll;" readonly></textarea>
 	</div>
+	<p><button type=button onclick="run()">run</button>
+	<button type=button onclick="clearInput()">reset</button> 
+	</p>
   </article>
   		<style type="text/css">
 	body {
