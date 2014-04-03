@@ -20,9 +20,10 @@ int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
 long wait;
-boolean pause = false;
+int mode = 0;
+int counter = 0;
 /*Button b;
-ArrayList<Button> blist = new ArrayList<Button>();*/
+ ArrayList<Button> blist = new ArrayList<Button>();*/
 
 //int savedTime, totalTime;
 //boolean solved = false; /////////////////TEMP 
@@ -114,7 +115,7 @@ void setup() {
 
 void draw() {
 
-  if (!queue.isEmpty() && !pause) {
+  if (queue.size() > counter && mode == 0) {
     animate(queue);
   }
   fill(128, 128, 128); //background green
@@ -147,11 +148,22 @@ void draw() {
 }
 
 void animate(ArrayList<Move> queue) {
-  Move m = queue.get(0); 
-  queue.remove(0);
+  Move m = queue.get(counter); 
+  counter++;
   int n = m.n;
   int to = m.to;
   int from = m.from;
+  long start = millis();
+  while ( millis () - start < wait ) {
+  }
+  draw_disc(n, from, to);
+}
+
+void animate_back(ArrayList<Move> queue) {
+  Move m = queue.get(--counter); 
+  int n = m.n;
+  int from = m.to;
+  int to = m.from;
   long start = millis();
   while ( millis () - start < wait ) {
   }
@@ -486,13 +498,36 @@ void move_disc(int n, int from, int to) {
   queue.add(m);
 }
 
-void pause_animation(){
- pause = !pause; 
-}
 //solve_hanoi(3, 1, 3);
 
-class Move{
+class Move {
   int n;
   int to;
   int from;
 }
+
+void debug() {
+  mode = 1;
+}
+
+void step_forward() {
+  if (queue.size() > counter) {
+    animate(queue);
+  }
+}
+
+void runMode() {
+  mode = 0;
+}
+
+void step_back() {
+  if (counter >= 1) {
+    animate_back(queue);
+  }
+}
+
+void reset_queue() {
+  queue = new ArrayList<Move>();
+  counter = 0;
+}
+
