@@ -63,12 +63,9 @@ function solve_hanoi(n, start_peg, end_peg) {
 solve_hanoi(3, 1, 3);
 </textarea>
 </div>
-
-
 	<script type = "text/javascript" >
   		
   		var editor = CodeMirror.fromTextArea(document.getElementById("codeInputPane"), {
-  		//mode: "javascript",
   		theme: "neat",
   		autofocus: true,
     	lineNumbers: true,
@@ -78,6 +75,8 @@ solve_hanoi(3, 1, 3);
     	lint: true
   		});
 
+		
+		////////////// Graphical Output  /////////////////
   		var processingInstance;
 		
   		function move_disc(disc_number, from_peg, to_peg) {
@@ -86,9 +85,7 @@ solve_hanoi(3, 1, 3);
   			}
 
   			processingInstance.move_disc(disc_number, from_peg, to_peg);
-			//console.log("Move disk " + disc_number.toString() + " from peg " + from_peg.toString() + " to peg " + to_peg.toString() + "."); 
 			document.getElementById('demo').innerHTML += ("Move disk " + disc_number.toString() + " from peg " + from_peg.toString() + " to peg " + to_peg.toString() + ".\n"); 
-			//document.getElementById('demo').innerHTML += "In move_disc";
   		}
 		
 		function increaseTotalDiscs() {
@@ -105,95 +102,82 @@ solve_hanoi(3, 1, 3);
   			processingInstance.decreaseTotalDiscs();
 		}
 	 	
-		function resetDiscs() {
+		function reset() {
 			if (!processingInstance) {
   				processingInstance = Processing.getInstanceById('sketch');
   			}
+			clearOutput();
   			increaseTotalDiscs();
 			decreaseTotalDiscs();
 		}
 	 
-	 
+	 //////////////////// Text-box Output /////////////////////////
+		
+		function outputArguments(arguments, type){
+			var outputBox = document.getElementById('demo');
+			for(i in arguments)
+					{
+				if(type == 0)
+					{
+				outputBox.innerHTML +=(arguments[i]+ '\n');
+					}
+				else if (type == 1)
+					{
+				outputBox.innerHTML +=(arguments[i] + '\n');	
+					}
+				else
+					{
+				outputBox.innerHTML +=(arguments[i] + '\n');
+					}
+				}
+			}
+		
+		function printResult(){
+			var logOfConsole = [];
+			var _log = console.log,
+			_warn = console.warn,
+			_error = console.error;
+			
+			console.log = function() {
+				outputArguments(arguments, 0);
+				return true;
+			};
+
+			console.warn = function() {
+				outputArguments(arguments, 1);
+				logOfConsole.push({method: 'warn', arguments: arguments});
+				return _warn.apply(console, arguments);
+			};
+
+			console.error = function() {
+				outputArguments(arguments, 2);
+				logOfConsole.push({method: 'error', arguments: arguments});
+				return _error.apply(console, arguments);
+			};
+
+			window.onerror = function (msg, url, line) {
+				console.error("Caught[via window.onerror]: '" + msg + "' from " + url + ":" + line);
+				return true; // same as preventDefault
+			};
+		}
+	
+		function clearOutput(){
+			document.getElementById('demo').innerHTML = "";		
+		}
+		
 		function clearInput(){
 			clearOutput();	
 			editor.setValue("");
 			editor.clearHistory();
 			editor.clearGutter("gutterId"); //if you have gutters
-			resetDiscs();
+			reset();
 		}
 		
-		function clearOutput(){
-			document.getElementById('demo').innerHTML = "";		
-		}
-		
-		function reset(){
-		clearOutput();
-		resetDiscs();
-		}
-		
-		/*function run(){
-		clearOutput();	
-		var content = editor.getValue();		
-		var result = eval(content);
-		printResult();
-		}*/
-		
-		function outputArguments(arguments, type){
-		var outputBox = document.getElementById('demo');
-		for(i in arguments)
-				{
-			if(type == 0)
-				{
-			outputBox.innerHTML +=(arguments[i]+ '\n');
-				}
-			else if (type == 1)
-				{
-			outputBox.innerHTML +=(arguments[i] + '\n');	
-				}
-			else
-				{
-			outputBox.innerHTML +=(arguments[i] + '\n');
-				}
-			}
-		}
-		
-		function printResult(){
-
-			var logOfConsole = [];
-			var _log = console.log,
-			_warn = console.warn,
-			_error = console.error;
-
-	
-
-	console.log = function() {
-		outputArguments(arguments, 0);
-		return true;
-	};
-
-	console.warn = function() {
-		outputArguments(arguments, 1);
-		logOfConsole.push({method: 'warn', arguments: arguments});
-		return _warn.apply(console, arguments);
-	};
-
-	console.error = function() {
-		outputArguments(arguments, 2);
-		logOfConsole.push({method: 'error', arguments: arguments});
-		return _error.apply(console, arguments);
-	};
-
-	window.onerror = function (msg, url, line) {
-		console.error("Caught[via window.onerror]: '" + msg + "' from " + url + ":" + line);
-		return true; // same as preventDefault
-		};
-	}
-	  
 	 	function run(){
-		clearOutput();	
-		var content = editor.getValue();		
-		var result = eval(content);
-		printResult();
+			reset();	
+			var content = editor.getValue();		
+			var result = eval(content);
+			printResult();
 		}
   	</script>
 	
@@ -201,7 +185,7 @@ solve_hanoi(3, 1, 3);
 	<textarea id="demo"  style="width:605px; height:140px; overflow-y:scroll;" readonly></textarea>
 	</div>
 	<p><button type=button onclick="run()">run</button>
-	<button type=button onclick="clearInput()">clear</button> 
+	<button type=button onclick="clearInput()">clear code</button> 
 	<button type=button onclick="reset()">reset</button> 
 	</p>
   </article>
