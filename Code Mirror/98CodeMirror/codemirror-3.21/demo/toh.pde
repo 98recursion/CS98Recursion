@@ -444,7 +444,7 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
   // int passedTime = millis() - savedTime;
   // if (passedTime > totalTime) {
 
-  println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
+  //println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
   Disc d = peg[from_peg - 1].pop();
   peg[to_peg - 1].push(d);
 
@@ -453,7 +453,7 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
   //   savedTime = millis();
   //  }
 }
-void solve_hanoi(int n, int start_peg, int end_peg) {
+/*void solve_hanoi(int n, int start_peg, int end_peg) {
 
   // the peg that's not the start or end peg
   int spare_peg;
@@ -477,6 +477,7 @@ void solve_hanoi(int n, int start_peg, int end_peg) {
     solve_hanoi(n - 1, spare_peg, end_peg);
   }
 }  
+*/
 
 void move_disc(int n, int from, int to) {
   Move m = new Move();
