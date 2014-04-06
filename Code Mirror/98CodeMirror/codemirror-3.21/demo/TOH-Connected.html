@@ -113,6 +113,36 @@ solve_hanoi(3, 1, 3);
   			increaseTotalDiscs();
 			decreaseTotalDiscs();
 		}
+		
+		function debug(){
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+			processingInstance.debug();
+			run();
+		}
+		
+		function step(){
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+			processingInstance.step_forward();
+		}
+		
+		function back(){
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+			processingInstance.step_back();
+		}
+		
+		function wrapRun(){
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+			processingInstance.runMode();
+			run();
+		}
 	 
 	 //////////////////// Text-box Output /////////////////////////
 		
@@ -176,14 +206,6 @@ solve_hanoi(3, 1, 3);
 			reset();
 		}
 		
-		function wrapRun(){
-			if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-			processingInstance.runMode();
-			run();
-		}
-		
 	 	function run(){
 			reset();
 			var content = editor.getValue();		
@@ -192,27 +214,7 @@ solve_hanoi(3, 1, 3);
 		}
 
 		
-		function debug(){
-			if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-			processingInstance.debug();
-			run();
-		}
-		
-		function step(){
-			if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-			processingInstance.step_forward();
-		}
-		
-		function back(){
-			if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-			processingInstance.step_back();
-		}
+
   	</script>
 	
 	<div>
