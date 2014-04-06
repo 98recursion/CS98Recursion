@@ -20,9 +20,10 @@ int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
 long wait;
-boolean pause = false;
+int mode = 0;
+int counter = 0;
 /*Button b;
-ArrayList<Button> blist = new ArrayList<Button>();*/
+ ArrayList<Button> blist = new ArrayList<Button>();*/
 
 //int savedTime, totalTime;
 //boolean solved = false; /////////////////TEMP 
@@ -114,7 +115,7 @@ void setup() {
 
 void draw() {
 
-  if (!queue.isEmpty() && !pause) {
+  if (queue.size() > counter && mode == 0) {
     animate(queue);
   }
   fill(128, 128, 128); //background green
@@ -147,11 +148,22 @@ void draw() {
 }
 
 void animate(ArrayList<Move> queue) {
-  Move m = queue.get(0); 
-  queue.remove(0);
+  Move m = queue.get(counter); 
+  counter++;
   int n = m.n;
   int to = m.to;
   int from = m.from;
+  long start = millis();
+  while ( millis () - start < wait ) {
+  }
+  draw_disc(n, from, to);
+}
+
+void animate_back(ArrayList<Move> queue) {
+  Move m = queue.get(--counter); 
+  int n = m.n;
+  int from = m.to;
+  int to = m.from;
   long start = millis();
   while ( millis () - start < wait ) {
   }
@@ -166,7 +178,7 @@ color inHandColor() {
     return color(255, 204, 0); //green yellow
   }
   else
-    return color(204, 0, 0); // error - red
+    return color(204, 0, 0); //red
 }
 
 //temp: trigger autoiterate once after keypressed
@@ -175,7 +187,7 @@ void keyPressed() {
 
       if (key == 't' || key == 'T') {
       setTotalDiscs(total_discs);
-  //    solve_hanoi(total_discs, 1, 3);
+      solve_hanoi(total_discs, 1, 3);
     }
     else if ((key == 'r' || key == 'R') ) {
       setTotalDiscs(total_discs);
@@ -416,12 +428,9 @@ class Peg {
   void draw() {
     for  (int i=0; i< discs.length; i++) {  
       if (discs[i] != null) {
-        if (inHand == null && discs[i].isWithinDisc() && i == top_index) {
+        if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(112, 146, 190); //highlighted blue
-        }  
-        if (i != 0 && discs[i].size > discs[i - 1].size ){ //if current disc not bottom and current disc larger than disc below it
-        fill(204, 0, 0); //error - red 
-      } 
+        }
         else {
           fill(51, 51, 255); //blue
         }
@@ -447,7 +456,7 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
   // int passedTime = millis() - savedTime;
   // if (passedTime > totalTime) {
 
-  //println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
+  println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
   Disc d = peg[from_peg - 1].pop();
   peg[to_peg - 1].push(d);
 
@@ -456,7 +465,7 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
   //   savedTime = millis();
   //  }
 }
-/*void solve_hanoi(int n, int start_peg, int end_peg) {
+void solve_hanoi(int n, int start_peg, int end_peg) {
 
   // the peg that's not the start or end peg
   int spare_peg;
@@ -480,7 +489,6 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
     solve_hanoi(n - 1, spare_peg, end_peg);
   }
 }  
-*/
 
 void move_disc(int n, int from, int to) {
   Move m = new Move();
@@ -490,13 +498,36 @@ void move_disc(int n, int from, int to) {
   queue.add(m);
 }
 
-void pause_animation(){
- pause = !pause; 
-}
 //solve_hanoi(3, 1, 3);
 
-class Move{
+class Move {
   int n;
   int to;
   int from;
 }
+
+void debug() {
+  mode = 1;
+}
+
+void step_forward() {
+  if (queue.size() > counter) {
+    animate(queue);
+  }
+}
+
+void runMode() {
+  mode = 0;
+}
+
+void step_back() {
+  if (counter >= 1) {
+    animate_back(queue);
+  }
+}
+
+void reset_queue() {
+  queue = new ArrayList<Move>();
+  counter = 0;
+}
+
