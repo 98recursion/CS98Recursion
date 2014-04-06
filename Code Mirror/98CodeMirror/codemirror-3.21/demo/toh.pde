@@ -20,7 +20,7 @@ int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
 long wait;
-int mode = 0;
+int mode = 0; // 0 = run, 1 = debug
 int counter = 0;
 /*Button b;
  ArrayList<Button> blist = new ArrayList<Button>();*/
@@ -159,14 +159,20 @@ void animate(ArrayList<Move> queue) {
   draw_disc(n, from, to);
 }
 
+void animate_immediate(ArrayList<Move> queue) {
+  Move m = queue.get(counter); 
+  counter++;
+  int n = m.n;
+  int to = m.to;
+  int from = m.from;
+  draw_disc(n, from, to);
+}
+
 void animate_back(ArrayList<Move> queue) {
   Move m = queue.get(--counter); 
   int n = m.n;
   int from = m.to;
   int to = m.from;
-  long start = millis();
-  while ( millis () - start < wait ) {
-  }
   draw_disc(n, from, to);
 }
 
@@ -512,7 +518,7 @@ void debug() {
 
 void step_forward() {
   if (queue.size() > counter) {
-    animate(queue);
+    animate_immediate(queue);
   }
 }
 
