@@ -33,6 +33,10 @@ Peg[] peg = new Peg[3];
 float xOffset = 0.0; 
 float yOffset = 0.0; 
 
+int getTotalDiscs() {
+  return total_discs;
+}
+
 void setTotalDiscs(int total) {
   total_discs = total;
   // disc_height  = PEG_HEIGHT / total_discs or less, is height of one disc  
@@ -72,6 +76,10 @@ void decreaseTotalDiscs() {
   if (decr >= 1) {
     setTotalDiscs(decr);
   }
+}
+
+void resetTotalDiscs() {
+  setTotalDiscs(total_discs);
 }
 
 void setup() {
@@ -432,14 +440,18 @@ class Peg {
   }
 
   void draw() {
+
     for  (int i=0; i< discs.length; i++) {  
       if (discs[i] != null) {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(112, 146, 190); //highlighted blue
         }
 
-        if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
+        else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
+
           fill(204, 0, 0); //error - red
+
+         // errorOutput("Disc " + discs[i].size + " is larger than the disc below it.");
         } 
 
         else {
@@ -464,18 +476,11 @@ class Peg {
 //disc push !(isLegalAddition), cannot push legally
 void draw_disc(int disc_number, int from_peg, int to_peg) {
 
-  // int passedTime = millis() - savedTime;
-  // if (passedTime > totalTime) {
-
   println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
   Disc d = peg[from_peg - 1].pop();
   peg[to_peg - 1].push(d);
-
-
-
-  //   savedTime = millis();
-  //  }
 }
+
 void solve_hanoi(int n, int start_peg, int end_peg) {
 
   // the peg that's not the start or end peg
@@ -541,4 +546,3 @@ void reset_queue() {
   queue = new ArrayList<Move>();
   counter = 0;
 }
-
