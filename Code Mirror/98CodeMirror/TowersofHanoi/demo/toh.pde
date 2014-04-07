@@ -184,7 +184,7 @@ color inHandColor() {
     return color(255, 204, 0); //green yellow
   }
   else
-    return color(204, 0, 0); //red
+    return color(204, 0, 0); // error - red
 }
 
 //temp: trigger autoiterate once after keypressed
@@ -437,6 +437,11 @@ class Peg {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(112, 146, 190); //highlighted blue
         }
+
+        if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
+          fill(204, 0, 0); //error - red
+        } 
+
         else {
           fill(51, 51, 255); //blue
         }
