@@ -19,6 +19,8 @@ app.use(express.bodyParser());
 
 app.get('/', routes.index);
 
+app.get('/towers', routes.towers);
+
 app.get('/about', routes.about);
 
 app.get('/article/:id', routes.articles);

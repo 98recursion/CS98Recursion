@@ -6,6 +6,7 @@
 
 var blogEngine = require('../blog');
 var path = require('path');
+var fs = require('fs');
 
 
 exports.index = function(req, res) {
@@ -20,6 +21,12 @@ exports.articles = function(req, res) {
 	var entry = blogEngine.getBlogEntry(req.params.id);
 	res.render('article',{title:entry.title, blog:entry});
 };
+
+exports.towers = function( req, res ){
+	res.render('../views/about.html', {title:"Towers of Hanoi"});
+	
+	//fs.readFile('../../TowersofHanoi/demo/TOH-Connected.html');
+}
 
 exports.debug = function(req, res){
 	//Because this is still a hack, hard code the name

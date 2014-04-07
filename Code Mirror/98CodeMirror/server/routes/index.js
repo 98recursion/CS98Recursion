@@ -22,6 +22,12 @@ exports.articles = function(req, res) {
 	res.render('article',{title:entry.title, blog:entry});
 };
 
+exports.towers = function( req, res ){
+	res.render('../../TowersofHanoi/demo/TOH-Connected.html', {title:"Towers of Hanoi"});
+	
+	//fs.readFile('../../TowersofHanoi/demo/TOH-Connected.html');
+}
+
 exports.debug = function(req, res){
 	//Because this is still a hack, hard code the name
 	var requestedFile = 'sample.js';
