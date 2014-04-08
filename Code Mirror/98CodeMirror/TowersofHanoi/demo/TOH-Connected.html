@@ -105,6 +105,20 @@ solve_hanoi(3, 1, 3);
   			}
   			processingInstance.decreaseTotalDiscs();
 		}
+		
+		function setTotalDiscs(total) {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+  			processingInstance.setTotalDiscs(total);
+		}		
+		
+		function resetDiscs(){
+		if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+			processingInstance.resetTotalDiscs();
+		}
 	 	
 		function reset() {
 			if (!processingInstance) {
@@ -214,6 +228,16 @@ solve_hanoi(3, 1, 3);
 			var result = eval(content);
 			printResult();
 		}
+		
+		function testError(){
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+		var t = "test";
+		t = processingInstance.errorOutput(t);
+		document.getElementById('demo').innerHTML += t + " \n";	
+		}
+
   	</script>
 	 </article>
 	 
@@ -221,7 +245,7 @@ solve_hanoi(3, 1, 3);
 	<div>
 	<textarea id="demo"  style="width:605px; height:140px; overflow-y:scroll;" readonly></textarea>
 	 <p>
-	<p style = "position:fixed; top:30px; right:5px;"><button type=button onclick="wrapRun()">run</button></p>
+	<p style = "position:fixed; top:10px; right:5px;"><button type=button onclick="wrapRun()">run</button></p>
 	<p style = "position:fixed; top:30px; right:5px;"><button type=button onclick="reset()">reset</button></p>
 	<p style = "position:fixed; top:30px; right:5px;"><button type=button onclick="debug()">debug</button></p>
 	<p><button type=button onclick="step()">step forward</button></p>
@@ -267,16 +291,20 @@ solve_hanoi(3, 1, 3);
 	<body>
 		<div id="content">
 			<div>
+			<p>
+				<button type=button onclick="decreaseTotalDiscs()">- discs</button>
+				<button type=button onclick="increaseTotalDiscs()">+ discs</button>
+				<button type=button onclick ="resetDiscs()"> reset </button>
+				<button type=button onclick ="testError()"> test </button>
+
+			</p>
 
 				<canvas id="sketch" data-processing-sources="toh.pde" 
 						width="650" height="300">
 					<p>Your browser does not support the canvas tag.</p>
 					<!-- Note: you can put any alternative content here. -->
 				</canvas>
-				<p>
-					<button type=button onclick="decreaseTotalDiscs()">- discs</button>
-					<button type=button onclick="increaseTotalDiscs()">+ discs</button>
-				</p>
+
 				<noscript>
 					<p>JavaScript is required to view the contents of this page.</p>
 				</noscript>
