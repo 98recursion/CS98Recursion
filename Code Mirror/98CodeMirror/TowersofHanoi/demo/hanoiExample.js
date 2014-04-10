@@ -11,6 +11,37 @@
 		////////////// Graphical Output  /////////////////
   		var processingInstance;
 		var first_call;
+		
+		
+		// print error messages
+		var bound = false;
+		var processingInstance;
+		var pjs;
+
+		function bindJavascript() {
+			if (!pjs) {
+				pjs = Processing.getInstanceById('sketch');
+			}
+			if (pjs != null) {
+				pjs.bindJavascript(this);
+				bound = true;
+			}
+
+			if (!bound) {
+				setTimeout(bindJavascript, 250);
+			}
+		}
+		bindJavascript();
+		//
+		  		function output_error_message(string_1) {
+  		// var string_1;
+	  	// 	if (!processingInstance) {
+	  	// 		processingInstance = Processing.getInstanceById('sketch');
+	  	// 	}
+	  	// 	string_1 = processingInstance.glob_string;
+			console.log(string_1);
+		}
+		
   		function move_disc(disc_number, from_peg, to_peg) {
   			if (!processingInstance) {
   				processingInstance = Processing.getInstanceById('sketch');

@@ -12,6 +12,20 @@
 //press 3 - 9 or 0 to init 3-9 or 10 discs
 //press - or + to decr or incr # of discs, between 1 and 10
 
+//////////////////////
+
+interface JavaScript {
+  void output_error_message(String message);
+}
+
+void bindJavascript(JavaScript js) {
+  javascript = js;
+}
+
+JavaScript javascript;
+
+//////////////////////
+
 int PEG_WIDTH, PEG_HEIGHT, PEG_BASE, BASE_SIXTH;
 int T1_L, T1_C, T1_R, T2_L, T2_C, T2_R, T3_L, T3_C, T3_R;
 int total_discs, disc_height, disc_width_per_size;
@@ -24,9 +38,6 @@ int mode = 0; // 0 = run, 1 = debug
 int counter = 0;
 /*Button b;
  ArrayList<Button> blist = new ArrayList<Button>();*/
-
-//int savedTime, totalTime;
-//boolean solved = false; /////////////////TEMP 
 
 Peg[] peg = new Peg[3];
 
@@ -87,9 +98,6 @@ void setup() {
   queue = new ArrayList<Move>();
   solve = false;
   size(650, 400); // size(500, 1000)
-
-  //  savedTime = millis();
-  //  totalTime = 5000;
 
   PEG_WIDTH = width/20; //width of peg spire
   //PEG_HEIGHT = height - PEG_WIDTH * 3; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
@@ -191,8 +199,10 @@ color inHandColor() {
     (overPeg3() && peg[2].isLegalAddition(inHand))) {
     return color(255, 204, 0); //green yellow
   }
-  else
+  else{		
+
     return color(204, 0, 0); // error - red
+	}
 }
 
 //temp: trigger autoiterate once after keypressed
@@ -289,8 +299,10 @@ void mouseReleased() {
       peg[2].push(inHand);
       //println("peg[2]: "+ peg[2].top_index);
     }
-    else inHand.prevPeg.push(inHand);
-  }
+    else {
+	inHand.prevPeg.push(inHand);
+	}
+ }
   inHand = null;
 }
 
@@ -449,9 +461,14 @@ class Peg {
 
         else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
 
+  if (javascript != null) {                 ///error message
+    //javascript.output_error_message("Disc " + discs[i].size + " is larger than the disc below it.");		///error message
+	//error message successfully sends
+	//TODO stop resending the error message with every call to draw()
+  } 										///error message
+  
           fill(204, 0, 0); //error - red
 
-         // errorOutput("Disc " + discs[i].size + " is larger than the disc below it.");
         } 
 
         else {
