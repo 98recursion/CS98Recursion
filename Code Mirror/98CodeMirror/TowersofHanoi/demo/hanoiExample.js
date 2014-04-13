@@ -104,6 +104,9 @@
   				processingInstance = Processing.getInstanceById('sketch');
   			}
 			processingInstance.step_forward();
+			var messageToPost = processingInstance.getMessage();
+			var outputBox = document.getElementById('demo');
+			outputBox.innerHTML += messageToPost;
 		}
 		
 		function back(){
@@ -111,6 +114,9 @@
   				processingInstance = Processing.getInstanceById('sketch');
   			}
 			processingInstance.step_back();
+			var messageToPost = processingInstance.getMessage();
+			var outputBox = document.getElementById('demo');
+			outputBox.innerHTML += messageToPost;
 		}
 		
 		function wrapRun(){
@@ -185,7 +191,7 @@
 		
 	 	function run(){
 			if(myTime == null){
-				 myTime = setInterval(function(){postMyMessage()},1000);
+				 myTime = setInterval(function(){postMyMessage()},100);
 			}
 			reset();
 			var content = editor.getValue();		

@@ -23,6 +23,7 @@ ArrayList<String> report;
 long wait;
 int mode = 0; // 0 = run, 1 = debug
 int counter = 0;
+long globalTime = 0;
 /*Button b;
  ArrayList<Button> blist = new ArrayList<Button>();*/
 
@@ -116,7 +117,7 @@ void setup() {
 
 void draw() {
 
-  if (queue.size() > counter && mode == 0) {
+  if (queue.size() > counter && mode == 0 && millis() - globalTime > wait) {
     animate(queue);
   }
   fill(128, 128, 128); //background green
@@ -154,11 +155,9 @@ void animate(ArrayList<Move> queue) {
   int n = m.n;
   int to = m.to;
   int from = m.from;
-  long start = millis();
-  while ( millis () - start < wait ) {
-  }
   report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
   draw_disc(n, from, to);
+  globalTime = millis();
 }
 
 void animate_immediate(ArrayList<Move> queue) {
@@ -542,10 +541,10 @@ void reset_queue() {
 }
 
 String getMessage(){
-    if(report.size() == 0){
-       return ""; 
+    String value = "";
+    while(report.size() != 0){
+       value += report.get(0);
+       report.remove(0);
     }
-    String value = report.get(0);
-    report.remove(0);
     return value;
 }
