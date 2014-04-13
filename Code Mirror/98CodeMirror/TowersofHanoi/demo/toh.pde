@@ -12,20 +12,6 @@
 //press 3 - 9 or 0 to init 3-9 or 10 discs
 //press - or + to decr or incr # of discs, between 1 and 10
 
-//////////////////////
-
-interface JavaScript {
-  void output_error_message(String message);
-}
-
-void bindJavascript(JavaScript js) {
-  javascript = js;
-}
-
-JavaScript javascript;
-
-//////////////////////
-
 int PEG_WIDTH, PEG_HEIGHT, PEG_BASE, BASE_SIXTH;
 int T1_L, T1_C, T1_R, T2_L, T2_C, T2_R, T3_L, T3_C, T3_R;
 int total_discs, disc_height, disc_width_per_size;
@@ -33,20 +19,20 @@ Disc inHand = null;
 int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
+ArrayList<String> report;
 long wait;
 int mode = 0; // 0 = run, 1 = debug
 int counter = 0;
 /*Button b;
  ArrayList<Button> blist = new ArrayList<Button>();*/
 
+//int savedTime, totalTime;
+//boolean solved = false; /////////////////TEMP 
+
 Peg[] peg = new Peg[3];
 
 float xOffset = 0.0; 
 float yOffset = 0.0; 
-
-int getTotalDiscs() {
-  return total_discs;
-}
 
 void setTotalDiscs(int total) {
   total_discs = total;
@@ -89,15 +75,15 @@ void decreaseTotalDiscs() {
   }
 }
 
-void resetTotalDiscs() {
-  setTotalDiscs(total_discs);
-}
-
 void setup() {
 
   queue = new ArrayList<Move>();
+  report = new ArrayList<String>();
   solve = false;
   size(650, 400); // size(500, 1000)
+
+  //  savedTime = millis();
+  //  totalTime = 5000;
 
   PEG_WIDTH = width/20; //width of peg spire
   //PEG_HEIGHT = height - PEG_WIDTH * 3; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
@@ -120,7 +106,6 @@ void setup() {
 
   wait = 1000;
 
-  int c = color(255, 255, 255);
 
   /*
   blist.add(new Button(c, 70, 10, 100, 40, "Reset"));
@@ -172,6 +157,7 @@ void animate(ArrayList<Move> queue) {
   long start = millis();
   while ( millis () - start < wait ) {
   }
+  report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
   draw_disc(n, from, to);
 }
 
@@ -181,6 +167,7 @@ void animate_immediate(ArrayList<Move> queue) {
   int n = m.n;
   int to = m.to;
   int from = m.from;
+  report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
   draw_disc(n, from, to);
 }
 
@@ -189,6 +176,7 @@ void animate_back(ArrayList<Move> queue) {
   int n = m.n;
   int from = m.to;
   int to = m.from;
+  report.add("Undo: Moving Disc "+n+" from Peg "+to+" to Peg "+from+".\n");
   draw_disc(n, from, to);
 }
 
@@ -199,10 +187,8 @@ color inHandColor() {
     (overPeg3() && peg[2].isLegalAddition(inHand))) {
     return color(255, 204, 0); //green yellow
   }
-  else{		
-
-    return color(204, 0, 0); // error - red
-	}
+  else
+    return color(204, 0, 0); //red
 }
 
 //temp: trigger autoiterate once after keypressed
@@ -299,10 +285,8 @@ void mouseReleased() {
       peg[2].push(inHand);
       //println("peg[2]: "+ peg[2].top_index);
     }
-    else {
-	inHand.prevPeg.push(inHand);
-	}
- }
+    else inHand.prevPeg.push(inHand);
+  }
   inHand = null;
 }
 
@@ -452,25 +436,11 @@ class Peg {
   }
 
   void draw() {
-
     for  (int i=0; i< discs.length; i++) {  
       if (discs[i] != null) {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(112, 146, 190); //highlighted blue
         }
-
-        else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
-
-  if (javascript != null) {                 ///error message
-    //javascript.output_error_message("Disc " + discs[i].size + " is larger than the disc below it.");		///error message
-	//error message successfully sends
-	//TODO stop resending the error message with every call to draw()
-  } 										///error message
-  
-          fill(204, 0, 0); //error - red
-
-        } 
-
         else {
           fill(51, 51, 255); //blue
         }
@@ -493,11 +463,17 @@ class Peg {
 //disc push !(isLegalAddition), cannot push legally
 void draw_disc(int disc_number, int from_peg, int to_peg) {
 
-  println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
+  // int passedTime = millis() - savedTime;
+  // if (passedTime > totalTime) {
+
   Disc d = peg[from_peg - 1].pop();
   peg[to_peg - 1].push(d);
-}
 
+
+
+  //   savedTime = millis();
+  //  }
+}
 void solve_hanoi(int n, int start_peg, int end_peg) {
 
   // the peg that's not the start or end peg
@@ -561,5 +537,15 @@ void step_back() {
 
 void reset_queue() {
   queue = new ArrayList<Move>();
+  report = new ArrayList<String>();
   counter = 0;
+}
+
+String getMessage(){
+    if(report.size() == 0){
+       return ""; 
+    }
+    String value = report.get(0);
+    report.remove(0);
+    return value;
 }

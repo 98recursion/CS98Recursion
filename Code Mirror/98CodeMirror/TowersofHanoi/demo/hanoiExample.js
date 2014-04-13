@@ -7,6 +7,8 @@
     	gutters: ["CodeMirror-lint-markers"],
     	lint: true
   		});
+		
+		var myTime;
 
 		////////////// Graphical Output  /////////////////
   		var processingInstance;
@@ -48,7 +50,7 @@
   			}
 
   			processingInstance.move_disc(disc_number, from_peg, to_peg);
-			document.getElementById('demo').innerHTML += ("Move disk " + disc_number.toString() + " from peg " + from_peg.toString() + " to peg " + to_peg.toString() + ".\n"); 
+			//document.getElementById('demo').innerHTML += ("Move disk " + disc_number.toString() + " from peg " + from_peg.toString() + " to peg " + to_peg.toString() + ".\n"); 
   		}
 		
 		function increaseTotalDiscs() {
@@ -182,6 +184,9 @@
 		}
 		
 	 	function run(){
+			if(myTime == null){
+				 myTime = setInterval(function(){postMyMessage()},1000);
+			}
 			reset();
 			var content = editor.getValue();		
 			var result = eval(content);
@@ -195,4 +200,13 @@
 		var t = "test";
 		t = processingInstance.errorOutput(t);
 		document.getElementById('demo').innerHTML += t + " \n";	
+		}
+		
+		function postMyMessage() {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+			var messageToPost = processingInstance.getMessage();
+			var outputBox = document.getElementById('demo');
+			outputBox.innerHTML += messageToPost;
 		}

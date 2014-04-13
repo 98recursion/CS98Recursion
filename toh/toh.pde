@@ -19,6 +19,7 @@ Disc inHand = null;
 int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
+ArrayList<String> report;
 long wait;
 int mode = 0; // 0 = run, 1 = debug
 int counter = 0;
@@ -77,6 +78,7 @@ void decreaseTotalDiscs() {
 void setup() {
 
   queue = new ArrayList<Move>();
+  report = new ArrayList<String>();
   solve = false;
   size(650, 400); // size(500, 1000)
 
@@ -104,7 +106,6 @@ void setup() {
 
   wait = 1000;
 
-  int c = color(255, 255, 255);
 
   /*
   blist.add(new Button(c, 70, 10, 100, 40, "Reset"));
@@ -156,6 +157,7 @@ void animate(ArrayList<Move> queue) {
   long start = millis();
   while ( millis () - start < wait ) {
   }
+  report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
   draw_disc(n, from, to);
 }
 
@@ -165,6 +167,7 @@ void animate_immediate(ArrayList<Move> queue) {
   int n = m.n;
   int to = m.to;
   int from = m.from;
+  report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
   draw_disc(n, from, to);
 }
 
@@ -173,6 +176,7 @@ void animate_back(ArrayList<Move> queue) {
   int n = m.n;
   int from = m.to;
   int to = m.from;
+  report.add("Undo: Moving Disc "+n+" from Peg "+to+" to Peg "+from+".\n");
   draw_disc(n, from, to);
 }
 
@@ -462,7 +466,6 @@ void draw_disc(int disc_number, int from_peg, int to_peg) {
   // int passedTime = millis() - savedTime;
   // if (passedTime > totalTime) {
 
-  println("Moving Disc "+disc_number+" from Peg "+from_peg+" to Peg "+to_peg+".");
   Disc d = peg[from_peg - 1].pop();
   peg[to_peg - 1].push(d);
 
@@ -534,6 +537,15 @@ void step_back() {
 
 void reset_queue() {
   queue = new ArrayList<Move>();
+  report = new ArrayList<String>();
   counter = 0;
 }
 
+String getMessage(){
+    if(report.size() == 0){
+       return ""; 
+    }
+    String value = report.get(0);
+    report.remove(0);
+    return value;
+}
