@@ -214,5 +214,8 @@
   			}
 			var messageToPost = processingInstance.getMessage();
 			var outputBox = document.getElementById('demo');
+			if(messageToPost.indexOf("Error:") != -1){
+				outputBox.style.color = "red";
+			}
 			outputBox.innerHTML += messageToPost;
 		}
