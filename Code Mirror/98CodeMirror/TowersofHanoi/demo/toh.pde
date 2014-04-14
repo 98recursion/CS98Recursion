@@ -394,6 +394,22 @@ class Peg {
   Disc topDisc() {
     return discs[top_index];
   }
+  
+   //if peg is legal, every disc on peg is smaller than the disc below it 
+  boolean pegIsLegal() {
+    //0 or 1 disc on peg
+    if (isEmpty()) {
+      return true;
+    }
+    else {
+      for (int i = 1; i <= top_index; i++) {  
+        if (discs[i].size > discs[i - 1].size) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
   void push(Disc disc) {
     if (top_index < total_discs) {
@@ -403,6 +419,9 @@ class Peg {
       disc.x = x_by_peg(peg_number);
       disc.y = y_by_index(top_index);
       //println("NewTopIndex: " + disc +" to [" + top_index + "] of Peg#" + peg_number );
+	  
+	  if (!pegIsLegal())
+	  report.add("Error: There is a disc on Peg# " + peg_number + " that is larger than the disc below it.\n");
     }
   }
 
@@ -440,6 +459,9 @@ class Peg {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(112, 146, 190); //highlighted blue
         }
+        else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
+          fill(204, 0, 0); //error - red
+        } 
         else {
           fill(51, 51, 255); //blue
         }
