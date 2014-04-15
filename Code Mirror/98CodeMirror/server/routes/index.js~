@@ -8,7 +8,6 @@ var blogEngine = require('../blog');
 var path = require('path');
 var fs = require('fs');
 
-
 exports.index = function(req, res) {
 	res.render('index',{title:"My Blog", entries:blogEngine.getBlogEntries()});
 };
@@ -23,31 +22,22 @@ exports.articles = function(req, res) {
 };
 
 exports.towers = function( req, res ){
-	res.render('../views/about.html', {title:"Towers of Hanoi"});
+	res.render('../TowersTest.html', {title:"Towers of Hanoi"});
 	
 	//fs.readFile('../../TowersofHanoi/demo/TOH-Connected.html');
+};
+
+exports.queens = function( req, res ){
+	res.render('../TowersofHanoi/demo/nQueens-Connected.html', {title:"nQueens"});
+};
+
+exports.codeM = function( req, res ){
+	res.render('../TowersofHanoi/demo/fullscreen.html', {title:"codeMirror"});
+};
+
+exports.theme = function( req, res ){
+	res.render('../views/theme1.html', {title:"THEME"});
 }
 
-exports.debug = function(req, res){
-	//Because this is still a hack, hard code the name
-	var requestedFile = 'sample.js';
-	var fileBaseDir = path.join( __dirname, '../tempCode');
-	var filesDir = path.normalize(fileBaseDir);
-	var fullRequestedFilePath = path.join(filesDir, requestedFile);
-	
-	/* File must exist and must be located inside the filesDir */
-	if (fs.existsSync(fullRequestedFilePath) && fullRequestedFilePath.indexOf(filesDir) === 0) {
-		ok200({
-			data: fs.readFileSync(fullRequestedFilePath).toString(),
-			  breakpoints: require('../rewriter/multirewriter.js').getRewrittenContent(requestedFile).breakpoints || []
-		});
-	}
-	
-	function ok200(data) {
-		//res.set('content-type', 'application/json' );
-		res.writeHead(200, { 'Content-Type': 'application/json' });
-		res.end(JSON.stringify(data || {}));
-	}
-	
-};
+
 
