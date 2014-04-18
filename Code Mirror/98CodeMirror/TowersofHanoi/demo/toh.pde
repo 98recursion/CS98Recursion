@@ -1,16 +1,28 @@
 //toh.pde
-//towers of hanoi
-//only the top disc on the peg can be clicked
+//interactive towers of hanoi
 //drag and drop
-//if move legal, peg snaps to bottom of peg over which disc dropped
+//only the top disc on the peg can be clicked
+//click topmost peg and drag to another peg
+//if move legal, peg snaps to bottom of the new peg
 // if move illegal, snaps back to previous peg
-//while in hand, if move legal then disc green, else red
-
+//while in hand, if move legal then disc positive color, else negative
+//
 //temporary tests:
 //press t to autosolve towers
 //press r to reset towers
 //press 3 - 9 or 0 to init 3-9 or 10 discs
 //press - or + to decr or incr # of discs, between 1 and 10
+
+
+color BACKGROUND = color (170); //grey
+color PEG = color(82, 24, 17); //brown
+color PEGTEXT = color(0); //black
+color DISCTEXT = color(0, 180); //black, slightly transparent
+color DISC_NEUTRAL = color(2, 142, 155);//(51, 51, 255); //blue
+color DISC_HIGHLIGHT = color(53, 192, 205);//(112, 146, 190);//light blue
+color DISC_WRONG = color(255, 13, 0); //red
+color DISC_RIGHT = color(255, 154, 64); //light orange
+color DISC_WIN = color(0, 198, 24); //green
 
 int PEG_WIDTH, PEG_HEIGHT, PEG_BASE, BASE_SIXTH;
 int T1_L, T1_C, T1_R, T2_L, T2_C, T2_R, T3_L, T3_C, T3_R;
@@ -27,9 +39,6 @@ long globalTime = 0;
 /*Button b;
  ArrayList<Button> blist = new ArrayList<Button>();*/
 
-//int savedTime, totalTime;
-//boolean solved = false; /////////////////TEMP 
-
 Peg[] peg = new Peg[3];
 
 float xOffset = 0.0; 
@@ -40,13 +49,12 @@ void setTotalDiscs(int total) {
   // disc_height  = PEG_HEIGHT / total_discs or less, is height of one disc  
   // disc_height = ((PEG_HEIGHT - PEG_WIDTH) / total_discs) - (height/100);  
   int disc_height_unconstrained = ((PEG_HEIGHT - PEG_WIDTH) / total_discs) - (height/100);
-  //make height of 1 or 2 lone discs no larger than heights in a stack of 3  
-  disc_height = min(disc_height_unconstrained, ((PEG_HEIGHT - PEG_WIDTH) / 3) - (height/100));  
+  //make height of 1 or 2 lone discs no larger than heights in a stack of 6  
+  disc_height = min(disc_height_unconstrained, ((PEG_HEIGHT - PEG_WIDTH) / 6) - (height/100));  
 
   //disc_width_per_size = total disc_width / size, is between PEG_WIDTH and BASE_SIXTH
   //disc_width_per_size = (BASE_SIXTH * 2) / total_discs;
   //disc_width_per_size = ((BASE_SIXTH * 2) - PEG_WIDTH) / total_discs;
-
 
   //init three pegs, no discs
   peg[0] = new Peg(1, T1_C);
@@ -107,7 +115,6 @@ void setup() {
 
   wait = 1000;
 
-
   /*
   blist.add(new Button(c, 70, 10, 100, 40, "Reset"));
    blist.add(new Button(c, 190, 10, 100, 40, "Solve"));
@@ -120,17 +127,18 @@ void draw() {
   if (queue.size() > counter && mode == 0 && millis() - globalTime > wait) {
     animate(queue);
   }
-  fill(128, 128, 128); //background green
+  fill(BACKGROUND); //background
   noStroke();
   rect(0, 0, width, height); //background
-  stroke(0);
 
   //peg base in background
-  fill(82, 24, 17); //brown
+  fill(PEG); //brown
   rect(PEG_WIDTH, height - (PEG_WIDTH), width - (2 * PEG_WIDTH), 50); //peg base
   rect(T1_C - PEG_WIDTH/2, height - PEG_HEIGHT, PEG_WIDTH, PEG_HEIGHT - PEG_WIDTH, 30, 30, 0, 0);
   rect(T2_C - PEG_WIDTH/2, height - PEG_HEIGHT, PEG_WIDTH, PEG_HEIGHT - PEG_WIDTH, 30, 30, 0, 0);
   rect(T3_C - PEG_WIDTH/2, height - PEG_HEIGHT, PEG_WIDTH, PEG_HEIGHT - PEG_WIDTH, 30, 30, 0, 0);
+
+  stroke(0);
 
   //pegs
   for (int i=0; i< peg.length; i++) {
@@ -138,7 +146,6 @@ void draw() {
   }
 
   if (inHand != null) {   
-    //fill(0, 0, 180); //darker blue
     fill(inHandColor()); 
     inHand.draw();
   }
@@ -179,15 +186,15 @@ void animate_back(ArrayList<Move> queue) {
   draw_disc(n, from, to);
 }
 
-//colors green if inHand is legal addition to peg it is over, else red
+//colors if inHand is legal addition to peg it is over, else red
 color inHandColor() {
   if ((overPeg1() && peg[0].isLegalAddition(inHand))||
     (overPeg2() && peg[1].isLegalAddition(inHand)) ||
     (overPeg3() && peg[2].isLegalAddition(inHand))) {
-    return color(255, 204, 0); //green yellow
+    return color(DISC_RIGHT); // yellow
   }
   else
-    return color(204, 0, 0); //red
+    return color(DISC_WRONG); //red
 }
 
 //temp: trigger autoiterate once after keypressed
@@ -350,7 +357,7 @@ class Disc {
     rect(x - (disc_width)/2, y, disc_width, disc_height, 15, 15, 15, 15); 
 
     //black text label
-    fill(0, 180);
+    fill(DISCTEXT);
     textAlign(CENTER); 
     textSize(disc_height);
     text(size, x, y + disc_height - (disc_height/10));
@@ -394,8 +401,8 @@ class Peg {
   Disc topDisc() {
     return discs[top_index];
   }
-  
-   //if peg is legal, every disc on peg is smaller than the disc below it 
+
+  //if peg is legal, every disc on peg is smaller than the disc below it 
   boolean pegIsLegal() {
     //0 or 1 disc on peg
     if (isEmpty()) {
@@ -411,6 +418,10 @@ class Peg {
     return true;
   }
 
+  boolean winCondition() {
+    return (peg_number == 3 && top_index + 1 == total_discs);
+  }
+
   void push(Disc disc) {
     if (top_index < total_discs) {
       //println("PUSH: " + disc +" to [" + top_index + "] of Peg#" + peg_number );
@@ -419,9 +430,9 @@ class Peg {
       disc.x = x_by_peg(peg_number);
       disc.y = y_by_index(top_index);
       //println("NewTopIndex: " + disc +" to [" + top_index + "] of Peg#" + peg_number );
-	  
-	  if (!pegIsLegal())
-	  report.add("Error: There is a disc on Peg# " + peg_number + " that is larger than the disc below it.\n");
+
+      if (!pegIsLegal())
+        report.add("Error: There is a disc on Peg# " + peg_number + " that is larger than the disc below it.\n");
     }
   }
 
@@ -457,19 +468,22 @@ class Peg {
     for  (int i=0; i< discs.length; i++) {  
       if (discs[i] != null) {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
-          fill(112, 146, 190); //highlighted blue
+          fill(DISC_HIGHLIGHT);
+        }
+        else if (winCondition()) {
+          fill(DISC_WIN);
         }
         else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
-          fill(204, 0, 0); //error - red
-        } 
+          fill(DISC_WRONG);
+        }
         else {
-          fill(51, 51, 255); //blue
+          fill(DISC_NEUTRAL);
         }
         discs[i].draw();
       }
     }
 
-    fill(0);
+    fill(PEGTEXT);
     textSize(PEG_WIDTH);
     text(peg_number, center_x, height - PEG_WIDTH / 5);
   }
@@ -484,16 +498,8 @@ class Peg {
 //disc push !(isLegalAddition), cannot push legally
 void draw_disc(int disc_number, int from_peg, int to_peg) {
 
-  // int passedTime = millis() - savedTime;
-  // if (passedTime > totalTime) {
-
   Disc d = peg[from_peg - 1].pop();
   peg[to_peg - 1].push(d);
-
-
-
-  //   savedTime = millis();
-  //  }
 }
 void solve_hanoi(int n, int start_peg, int end_peg) {
 
@@ -562,11 +568,12 @@ void reset_queue() {
   counter = 0;
 }
 
-String getMessage(){
-    String value = "";
-    while(report.size() != 0){
-       value += report.get(0);
-       report.remove(0);
-    }
-    return value;
+String getMessage() {
+  String value = "";
+  while (report.size () != 0) {
+    value += report.get(0);
+    report.remove(0);
+  }
+  return value;
 }
+
