@@ -30,8 +30,8 @@
 	<script src="processing.js" type="text/javascript"></script>
 
 	<h1>Towers of Hanoi</h1>
+	</head>
 	 <body>
-    <article id= "inputCode" style="width: 600px; height: 300px;">
     <div>
 	<textarea id="codeInputPane" name="code" type="text/javascript">
 
@@ -73,90 +73,12 @@ solve_hanoi(3, 1, 3);
 	<p style = "position:fixed; top:650px; right:1125px;"><button onclick="back()">step back</button></p>
 	</p>
  
-  		<style type="text/css">
-	body {
-	  font-family: Lucida Grande, Lucida Sans, Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
-	  font-size: 11px; font-weight: normal; text-decoration: none;
-		  line-height: 1.5em;
-	}
-	a img { 
-		border: 0px solid transparent;
-	}
-	a, a:link, a:visited, a:active, a:hover { 
-		color: #cdcdcd; text-decoration: underline;
-	}
-	h1 {
-	    font-family: Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
-		width: 50%; letter-spacing: 0.1em;
-		margin-bottom: 1em; font-size: 1.65em;
-		position: fixed;
-		top: 10px;
-		right:10px;
-		
-	}
-		canvas {
-		position: fixed;
-		top: 50px;
-		right:30px;
-		display: block; 
-		outline: 0px; 
-	}
-	#sketch {
-		margin-bottom: 1em; 
-		width: 650px; min-width: 300px; overflow: auto;
-		background-color: #3d3d3d;
-	}
-	
-	.CodeMirror {
-      	
-      	border: 2px solid #E0E0E0; 
-      	font-size:15px;
-		height: auto;
-		viewportMargin: 10;
-		
-      }
-	/*#place {
-		position: fixed;
-		top: 50px;
-		right:30px;
-		display: block; 
-		outline: 0px; 
-		margin-bottom: 1em; 
-		width: 650px; 
-		min-width: 300px; 
-		overflow: auto;
-	
-	}*/
-	#demo { 
-		margin: 5px auto 0px auto; padding: 15px 15px 15px 15px;
-		width: 1050px; min-width: 300px; overflow: auto;
-		background-color: white;
-		position: fixed;
-		top: 510px;
-		right:180px;
-	}
-	
-	button {
-		background: -webkit-linear-gradient(white, #AFAFAF, white); /* For Safari 5.1 to 6.0 */
-		background: -moz-linear-gradient(white, #AFAFAF, white); /* For Firefox 3.6 to 15 */
-		background: linear-gradient(white, #AFAFAF, white); /* Standard syntax (must be last) */
-		border-radius: .7em;
-		border: .1em solid #AFAFAF;
-		padding:
-			padding-top: 0.1em;
-			padding-right: 0.9em;
-			padding-bottom: 0.1em;
-			padding-left: 0.9em;
-		font-family:Arial,Helvetica,sans-serif;
-		font-size: 1.25em;
-	}
-
-		</style>
-			<button style = "position:fixed; top:460px; right:520px;" onclick="decreaseTotalDiscs()">- discs</button>
-			<button style = "position:fixed; top:460px; right:600px;" onclick="increaseTotalDiscs()">+ discs</button>
+		<div id = "tohBox">
 			<canvas id="sketch" data-processing-sources="toh.pde"></canvas>
-			</article>
-
+			<p style = "position: fixed; top: 41.1em; right: 9em;">
+				<button  id= "tohButton" style = "right:27.5em;" onclick="decreaseTotalDiscs()">- discs</button>
+				<button  id= "tohButton" style = "right:3.5em;" onclick="increaseTotalDiscs()">+ discs </button>
+			</p>
+		</div>
 	</body>
-</head>
 </html>
