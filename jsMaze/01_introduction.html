@@ -1,0 +1,160 @@
+
+<!doctype html>
+
+<head>
+
+<title>What are algorithms?</title>
+<meta charset="utf-8"/>
+
+<!-- This method of including the header boilerplate is probably slow.
+  A presumably faster technique is described here:
+
+  http://www.stevesouders.com/blog/2012/04/10/dont-docwrite-scripts/
+-->
+
+
+<script src="codefragment.js"></script>
+<script>document.write(loadText("header_boilerplate.html"));</script>
+
+</head>
+
+<body>
+
+<h1>What are algorithms</h1>
+
+<a href="https://docs.google.com/document/d/1pJ1oII2Yjo2WXY94Vsk6i4sd3dRQUlwY90n3_lFbF5A/edit?pli=1">Google Doc outline</a>
+
+<h2>What is an algorithm?</h2>
+
+An algorithm is a precise series of steps to solve a problem.  A good algorithm is
+<ul>
+  <li> <b>Complete.</b> If there's an answer, the algorithm will find it.</li>
+  <li> <b>Correct.</b> If the algorithm gives an answer, it's right.</li>
+  <li> <b>Efficient.</b> The algorithm doesn't take too much time (or computer memory).</li>
+</ul>
+
+Algorithms put the <i>science</i> in <i>computer science</i>, and finding good algorithms and knowing when to apply them will allow you to write programs that do interesting things.  How does Google maps figure out how to get from your home to Disney World?  It uses a <i>route-finding algorithm</i>.  How does Pixar color a three-dimensional model of a character based on the lighting in a three-dimensional model of a room?  It uses a <i>rendering algorithm</i>.  How does NASA choose how to arrange the solar panels on the international space station, and when to rearrange them?  It uses <i>optimization</i> and <i>scheduling</i> algorithms.   
+
+<p>Algorithms aren't just for computers.  Let's say you want to find a name in a phone book.  Here's a complete and correct algorithm that starts on the first page of the book:
+<ol>
+  <li>  Read the next name that you haven't seen.  </li>
+  <li>  If you found the name you were looking for, stop.  You've found it! </li>
+  <li>  Otherwise, if there are unread names, go back to step 1. </li>
+  <li>  But if there are no unread names, the name isn't in the book.  Stop. 
+</ol>  
+
+<p>  This algorithm is called <b>linear search</b>, because it searches by looking at the first name in the book first, the second name second, etc.  Is this algorithm efficient?  If the name you were looking for was "Zwolski", maybe not.   
+
+<h3>A guessing game</h3>
+
+Let's play a game.  I'm thinking of a whole number between 1 and 64.  
+
+<!-- Play the guessing game -->
+<p>
+Keep making guesses until you get my number:  
+
+<input type="text" name="number" id="guessingGameInput" onchange="guessingGame.input()"/>
+
+<p> I'll give you a hint after each guess:  <input type="text" value="" id="guessingGameOutput" readonly size=40>
+
+<p>Press <button type=button onclick="guessingGame.reset()">reset</button> and I'll pick a new number.
+
+<script src="guessingGame.js"></script>
+
+<script> guessingGame = new GuessingGame(1, 64); </script>
+
+<h3> Analysis of linear search</h3>
+
+You've probably noticed that the phone book search and the guessing game are similar.  In the guessing game, you want to search my brain for a whole number.  You could use linear search.  Here's how a game might go.  Guess 1.  Is that the number?  Nope, higher.  Guess 2.  Nope, higher.  3?  Nope, higher.  4?  Nope, higher.  5?  Yes, you found it!  (Assuming I was thinking of 5.)  
+
+<!-- How long did it take?  We could measure the time in seconds, but whaaaat ifff I taaaalk veeerrryy sloooowly?  A better way to measure the time cost would be  
+-->
+
+<p>How efficient is the algorithm?  Well, it took 5 guesses to discover the number 5.  What if I was instead thinking of the number 24?  
+
+<p>You can probably see that it's hard to say how long linear search will take.  If you're lucky, I'm thinking of a small number.  If you're not lucky, I'm thinking of a large number, which would be a very bad case for linear search.  
+
+<p>The most interesting case is the <b>worst case</b>, because if we can say something about the worst case, it's a sort of guarantee.  I can say with confidence that <i>linear search, in the worst case, will require 64 guesses for the guessing game described above.</i>  If you've got 10 minutes free to play, maybe you'd be willing to play the guessing game using linear search, because you know that you can ask 64 qeustions in 10 minutes and will certainly win, even if I annoyingly pick 64 as my number.
+
+<p>  But what if the game were slightly different?  I'm thinking of a number between one and one million.  I'll give you one hundred dollars if you can find my number using linear search in ten minutes.  If you lose, you give me one dollar.  Want to play?  
+
+<p> Let's describe how linear search performs in general.  Let's say we have n items (whole numbers, or names in a phone book, for example).  
+<b>In the worst case, linear search of n items will require n guesses.</b> 
+
+<p>The variable n might have the value 64, or one million, or one hundred billion.  The Hipparcos star catalog contains information about 118,218 stars.  If you used a computer implementation of linear search to search for a particular star in the star catalog, the program might have to examine up to 118,218 stars in the catalog to find the star you were looking for, in the worst case. 
+
+<h3> Binary search </h3>
+
+There may be many different algorithms to solve a single problem.  Could we do better than linear search for the guessing game?  
+
+<p>It seems linear search isn't using all the information available.  If you guess the number 1, and I tell you "higher", then all you've learned is that my number is between 2 and 64.  You still have 63 possible choices.  
+<p>On the other hand, if you guessed the number 32, and I tell you "lower", then you know that the number is between 1 and 31.  You have only 31 possible choices.  You've learned more than if you'd guessed 1.  It seems like 32 is a smarter first guess than 1.  (Of course, maybe I was thinking of the number 1, which is the best case for linear search.  But that doesn't seem likely.)
+
+<p> Ok, so now you know the number is between 1 and 31.  What's the next guess?  If you pick a number midway between 1 and 31, in the worst case, you'll have reduced the number of remaining possible values by half.  So pick 16, which is about midway beween 1 and 31.  Let's say I tell you "higher".  Now you know that the number is between 17 and 31.  Your next guess should be 24, which is the average of 17 and 31.   
+
+<p> This is the main idea behind <b>binary search</b>:  choose a guess on each round that divides the remaining set of possible items (in this case, whole numbers) into two roughly equal subsets, and use the "higher" or "lower" information to discard one of the subsets.  
+
+<p> We'll return to binary search, and show how you can use it to efficiently search for an item in a javascript array.  But first, let's look at an algorithm for a trickier problem.    
+
+<h3>Breadth-first search</h3>
+
+What do Pacman, the royal family of Britain, and Disney World have in common?  Here are three "route-finding" or "path-search" problems:
+
+<ul>
+  <li> What path should a ghost follow to get to Pacman as quickly as possible?</li>
+  <li> How is the current Prince William related to King William III, who endowed William and Mary college in 1693?</li>
+  <li> What's the best way to drive from Wichita, Kansas, to Disney World in Orlando, Florida?  </li>
+</ul>
+
+<p>
+We have to be given some information to answer any of these questions.  
+For example, a family tree of the royal family of Britain would show connections between people who were directly related.  Prince William is the son of Charles Philip Arthur Windsor.  Charles is the son of Queen Elizabeth II.  The problem is to find a short path on the family tree connecting Prince William and William III, using these direct connections.  
+
+<p>
+For Pacman, we have a map of the maze.  This map shows connections between adjacent open squares in the maze (or lack of connections, if there is a wall in between).  In order to find a path to Orlando, we might use a map of the United States, showing connections (roads) between nearby cities, although there is no single road that would allow you to drive directly from Wichita to Orlando.  
+
+<p>
+A <b>graph</b> is a set of items, and connections between them.  We call the items <b>nodes</b> and the connections <b>edges</b>.  A path between two nodes is a sequence of edges.  Prince William is a node on the family tree, as are Charles, Elizabeth, and William III.  Wichita is a node on the roadmap, as is Orlando.  Each pair of nodes on the graph is connected by a direct connection (an edge), or it is not.  So there is an edge between Prince William and his father, Charles.  But there is not an edge between Prince William and his grandmother, Elizabeth, since the two are only connected indirectly.
+
+<p>
+With pencil and paper, you could find a path between two nodes on any of these graphs.  But in order to implement graph search on a computer, we need a precise set of directions:  an algorithm.
+
+<p>
+There are many algorithms that search a graph for a path.  We'll look at a special type of <b>breadth-first search</b>.   
+
+<p>An alien crash lands in a corn maze.  Before crashing, it took a picture of the maze from above.  Now it would like to find its way out, without burning through the walls of the maze with its heat gun.  Here's the maze.  Dark green represents walls, and and white squares represent legal locations:     
+
+<p>
+<canvas id="mazeCanvas" width="300" height="300">  </canvas>
+
+
+<script src="maze.js"></script>
+
+<script>
+  var mazeCanvas = document.getElementById("mazeCanvas");
+
+  var processingInstance = new Processing(mazeCanvas, sketchMaze);
+</script>
+
+<p>
+White square are nodes.  If two white squares are adjacent horizontally or vertically, they are connected.  (Aliens, like chess rooks, cannot move diagonally.)  Dark green areas aren't nodes; they're just places the alien can't go.  
+
+<p> 
+Here's the idea behind the algorithm:  move closer to the goal (the exit) on each turn.  Reasonable, right?  But what does <i>closer</i> mean?  The alien can't fly, so walking in a straight line towards the goal will problably only result in the alien bonking into a wall.  Let's measure closeness of some node to the goal by the minimum number of moves the alien would have to make to get from that node to the goal.  
+
+<p>  How far is the goal from the goal?  Zero moves.  Click on the goal (marked with an x) to mark it with a zero.   
+
+<ol>
+  <li> There is one square exactly one move away from the goal.  Click it. </li>
+   
+  <li> There are some squares exactly two moves away from the goal.  Click them. </li>
+  
+  <li> Click on any squares three moves away from the goal.  </li> 
+  
+  <li> Keep clicking squares in order of increasing distance from the goal. </li> 
+
+</ol>
+
+
+
+</body>
