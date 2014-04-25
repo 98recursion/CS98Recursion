@@ -183,7 +183,7 @@
 		
 		function clearInput(){
 			clearOutput();	
-			editor.setValue("");
+			editor.setValue("/*---ADD SOLVE HANOI DIRECTIONS HERE---*/");
 			editor.clearHistory();
 			editor.clearGutter("gutterId"); //if you have gutters
 			reset();
