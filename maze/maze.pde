@@ -124,9 +124,7 @@ int[][] lableGraph( int[][] m, int[] s, int[] g ) {
 
   //Continue searching until the queue is empty or the start has been found.
   while ( ! queue.isEmpty () ) {
-    
-    println( "THE QUEUE IS: " + queue.size() );
-    
+        
     //Pop the first element from the queue
     int[] arr = queue.get( 0 );
     queue.remove(0);
@@ -136,21 +134,16 @@ int[][] lableGraph( int[][] m, int[] s, int[] g ) {
     //Check each of the elements next to the current one and add dist and to the queue if it is valid
     //A valid move happens if it is in the maze, not a wall, and not already labled
     //Above
-    int[] temp0 = { 
-      arr[0] - 1, arr[1]
-    };
+    int[] temp0 = { arr[0] - 1, arr[1]};
     if ( isValidMove( m, dist, temp0[0], temp0[1] ) ){
       dist[temp0[0]][temp0[1]] = value;
       queue.add( temp0 );
       if ( temp0[0] == s[0] && temp0[1] == s[1] ) {
-        println("TEMP: "+ temp0[0]+ temp0[1] + " GOAL: "+ g[0]+ g[1]);
         return dist;
       }
     }
     //Below
-    int[] temp1 = { 
-      arr[0] + 1, arr[1]
-    };
+    int[] temp1 = { arr[0] + 1, arr[1]};
     if ( isValidMove( m, dist, temp1[0], temp1[1] ) ){
       dist[temp1[0]][temp1[1]] = value;
       queue.add( temp1 );
@@ -159,9 +152,7 @@ int[][] lableGraph( int[][] m, int[] s, int[] g ) {
       }
     }
     //Right
-    int[] temp2 = { 
-      arr[0], arr[1] - 1
-    };
+    int[] temp2 = { arr[0], arr[1] - 1};
     if ( isValidMove( m, dist, temp2[0], temp2[1] ) ){
       dist[temp2[0]][temp2[1]] = value;
       queue.add( temp2 );
@@ -170,9 +161,7 @@ int[][] lableGraph( int[][] m, int[] s, int[] g ) {
       }
     }
     //Left
-    int[] temp3 = { 
-      arr[0], arr[1] + 1
-    };
+    int[] temp3 = { arr[0], arr[1] + 1};
     if ( isValidMove( m, dist, temp3[0], temp3[1] ) ){
       dist[temp3[0]][temp3[1]] = value;
       queue.add( temp3 );
@@ -180,7 +169,6 @@ int[][] lableGraph( int[][] m, int[] s, int[] g ) {
         return dist;
       }
     }
-    println( "END OF LOOP" );
   }
   return dist;
 }

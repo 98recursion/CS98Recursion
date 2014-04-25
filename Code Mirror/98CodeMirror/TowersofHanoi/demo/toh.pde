@@ -85,14 +85,10 @@ void decreaseTotalDiscs() {
 }
 
 void setup() {
-
+  size(580, 350); //size(650, 400)
   queue = new ArrayList<Move>();
   report = new ArrayList<String>();
   solve = false;
-  size(650, 400); // size(500, 1000)
-
-  //  savedTime = millis();
-  //  totalTime = 5000;
 
   PEG_WIDTH = width/20; //width of peg spire
   //PEG_HEIGHT = height - PEG_WIDTH * 3; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
@@ -470,11 +466,11 @@ class Peg {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(DISC_HIGHLIGHT);
         }
+		else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
+          fill(DISC_WRONG);
+        }
         else if (winCondition()) {
           fill(DISC_WIN);
-        }
-        else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
-          fill(DISC_WRONG);
         }
         else {
           fill(DISC_NEUTRAL);
