@@ -13,7 +13,6 @@
 //press 3 - 9 or 0 to init 3-9 or 10 discs
 //press - or + to decr or incr # of discs, between 1 and 10
 
-
 color BACKGROUND = color (170); //grey
 color PEG = color(82, 24, 17); //brown
 color PEGTEXT = color(0); //black
@@ -41,8 +40,8 @@ long globalTime = 0;
 
 Peg[] peg = new Peg[3];
 
-float xOffset = 0.0; 
-float yOffset = 0.0; 
+float xOffset = 0.0;
+float yOffset = 0.0;
 
 void setTotalDiscs(int total) {
   total_discs = total;
@@ -350,7 +349,25 @@ class Disc {
 
     //rect(x, y, width, height, topleftradius, toprightradius, brradius, blradius)
     //rect(x - (drawWidth)/2, y, drawWidth, disc_height); 
-    rect(x - (disc_width)/2, y, disc_width, disc_height, 15, 15, 15, 15); 
+
+    int discX = x - (disc_width)/2;
+    int discY = y;
+
+	//disc
+    rect(discX, discY, disc_width, disc_height, 15, 15, 15, 15); 
+
+    //shine
+    noStroke();
+    fill(255, 30);
+    //ellipse(discX + disc_height/4, discY + disc_height/3, disc_height/2 - 5, disc_height/2);
+    rect(discX+10, discY+2, disc_width-40, disc_height-disc_height/3 -20, 15, 15, 15, 15); //top bar
+    rect(discX+disc_width-25, discY+2, disc_height-disc_height/3 -20, disc_height-disc_height/3 -20, 15, 15, 15, 15); //top dot
+    rect(discX+3, discY+2, disc_width - disc_height/3, disc_height-disc_height/3, 15, 15, 15, 15); //inner
+    rect(discX+3, discY+2, disc_width-5, disc_height-disc_height/6, 15, 15, 15, 15); //outer
+
+    //rect(discX+10, discY + disc_height- disc_height/4, disc_width-20, 5, 15, 15, 15, 15); 
+
+    stroke(0);
 
     //black text label
     fill(DISCTEXT);
@@ -466,7 +483,7 @@ class Peg {
         if (inHand == null && discs[i].isWithinDisc() && i == top_index) {  
           fill(DISC_HIGHLIGHT);
         }
-		else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
+        else if (i != 0 && discs[i].size > discs[i - 1].size ) { //if current disc not bottom and current disc larger than disc below it
           fill(DISC_WRONG);
         }
         else if (winCondition()) {
