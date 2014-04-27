@@ -232,16 +232,25 @@ body {
 	}
 	h1 {
 	    font-family: Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
-		width: 78%; 
-		height: 12%;
 		letter-spacing: 0.1em;
 		//margin-bottom: 1em; font-size: 1.65em;
-		position: fixed;
-		top: -.5em;
-		left: 8em;
 		background-color: #024E68
 	}
-		canvas {
+	#header{
+	width: 78%; 
+	height: 12%;
+	position: fixed;
+		top: -.5em;
+		left: 8em;
+	}
+	#footer{
+	width: 78%; 
+	height: 7%;
+	position: fixed;
+		top: 37.3em;
+		left: 8em;
+	}
+	canvas {
 		display: block; 
 		outline: 0em; 
 	}
@@ -250,7 +259,7 @@ body {
 		width: 51.5em; min-width: 0em; overflow: auto;
 		background-color: #3d3d3d;
 		position: fixed;
-		top: 15em;
+		top: 11em;
 		right:14.5em;
 	}
 	
@@ -260,52 +269,54 @@ body {
       	font-size:1.33em;
 		width: 34em;
 		viewportMargin: 10;
-		top: 9em;
+		top: 6.5em;
 		left: 10em;
 		
 		
       }
 
 	#demo { 
-        width: 60em;
-        height: 10em;
+        width: 66.7em;
+        height: 11em;
 		overflow-y: scroll;
 		background-color: white;
 		position: fixed;
-		top: 41em;
+		top: 41.3em;
 		right:12.5em;
 	}
 	
 	button {
-		background: -webkit-linear-gradient(white, #AFAFAF, white); /* For Safari 5.1 to 6.0 */
-		background: -moz-linear-gradient(white, #AFAFAF, white); /* For Firefox 3.6 to 15 */
-		background: linear-gradient(white, #AFAFAF, white); /* Standard syntax (must be last) */
-		border-radius: .7em;
-		border: .1em solid #AFAFAF;
-		padding:
-			padding-top: 0.1em;
-			padding-right: 0.9em;
-			padding-bottom: 0.1em;
-			padding-left: 0.9em;
-		font-family:Arial,Helvetica,sans-serif;
-		font-size: 1.25em;
-	}
-	
-	.tohButton {
-		background: -webkit-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Safari 5.1 to 6.0 */
+		/*background: -webkit-linear-gradient(white, #AFAFAF, white); /* For Safari 5.1 to 6.0 */
+		/*background: -moz-linear-gradient(white, #AFAFAF, white); /* For Firefox 3.6 to 15 */
+		/*background: linear-gradient(white, #AFAFAF, white); /* Standard syntax (must be last) */
+    
+        background: -webkit-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Safari 5.1 to 6.0 */
 		background: -moz-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Firefox 3.6 to 15 */
 		background: linear-gradient(#4B4B4B, #242121, #4B4B4B); /* Standard syntax (must be last) */
+    
 		border-radius: .2em;
 		border: .1em solid #242121;
-		padding:
-			padding-top: 0.3em;
-			padding-right: 10.15em;
-			padding-bottom: 0.3em;
-			padding-left: 10.15em;
+        width: 15em;
+        height: 2em;
+        color: #BBB;
 		font-family:Arial,Helvetica,sans-serif;
 		font-size: 1.25em;
-		color: #BBB;
-		//position: fixed;
-		//top: 32.7em; 
+        font-weight: bold;
+	}
+	button:hover{
+	color: #024E68;
+	}
+	.tohButton {
+		/*background: -webkit-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Safari 5.1 to 6.0 */
+		/*background: -moz-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Firefox 3.6 to 15 */
+		/*background: linear-gradient(#4B4B4B, #242121, #4B4B4B); /* Standard syntax (must be last) */
+		/*color: #BBB;*/
+		position: fixed;
+		top: 35em;
+		
 	}
 
+    .debugButton {
+    position: fixed;
+    right: 75.2em;
+    }
