@@ -29,6 +29,10 @@
 	<!-- Processing -->
 	<script src="processing.js" type="text/javascript"></script>
 
+	<!-- debugjs
+	<script src="bundle.js" type="text/javascript"></script>
+	-->
+
 	<style type="text/css">
       .CodeMirror {
       	
@@ -37,24 +41,26 @@
 		height: auto;
 		viewportMargin: 10;
       }
+
+      .breakpoints {width: .8em;}
+      .breakpoint {color: #822;}
 	 
     </style>
 
     <article style="width: 660px; height: 600px;">
     <div>
 	<textarea id="codeInputPane" name="code" runnable="true" mode="javascript">
-	//nQueens
-</textarea>
+	</textarea>
 	<button type=button onclick="clearInput()">clear code</button> 
 
-</div>
+	</div>
 
 	<script src="nQueensExample.js" type="text/javascript"></script>
 	
 	<div>
 	<textarea id="demo"  style="width:605px; height:140px; overflow-y:scroll;" readonly></textarea>
 	</div>
-	<p><button type=button onclick="wrapRun()">run</button>
+	<p><button type=button onclick="run()">run</button>
 	<button type=button onclick="reset()">reset</button> 
 	<button type=button onclick="debug()">debug</button> 
 	<button type=button onclick="step()">step forward</button> 

@@ -1,12 +1,16 @@
 // NEXT GOALS:
 // DONE 1. turn queens red that conflict with choice
-// 2. implement a slow solving method
-// 3. change circles to queen images
+// DONE 2. implement a slow solving method
+// DONE 3. change circles to queen images
+// DONE 4. Fix color scheme (beige/khaki tiles?)
+// DONE 5. Debug queue/ animation
+// 6. Semantic debugging - turn queens red
+// 7. Implement interface with JS for running user code
 
-/// TEST ///
+/// Javascript interface ///
 
 interface JavaScript {
-  void test_string(String test);
+  void log_Processing_error(String error_message);
 }
 
 void bindJavascript(JavaScript js) {
@@ -15,11 +19,12 @@ void bindJavascript(JavaScript js) {
 
 JavaScript javascript;
 
-/// END TEST ///
+/// End Javascript interface ///
 
 int w, h;
 int cols, rows, side;
 //PImage queen_img;
+PShape queen_img_black, queen_img_green, queen_img_red;
 int board[][];
 boolean is_board_solved;
 //int mouse_click_x, mouse_click_y;
@@ -31,12 +36,18 @@ ArrayList<MoveFrame> animation_queue;
 boolean is_animation;
 long animation_speed;
 
+ArrayList<MoveFrame> debug_queue;
+boolean is_debug_mode;
+int curr_step;
+
+boolean is_run_mode;
+
 //String glob_string;
 
 void setup() {
   w = 320;
   h = 320;
-  size(w,h);
+  size(w, h);
   
   cols = 8;
   rows = 8;
@@ -52,11 +63,17 @@ void setup() {
   animation_queue = new ArrayList<MoveFrame>();
   is_animation = false;
   animation_speed = 1000;
+  
+  queen_img_black = loadShape("chessQueenPiece_black.svg");
+  queen_img_green = loadShape("chessQueenPiece_green.svg");
+  queen_img_red = loadShape("chessQueenPiece_red.svg");
 //  queen_img = loadImage("BlackCircle.gif");
 //  last_time = millis();
 //  println(queen_char);
 
 //glob_string = "test 123";
+  is_debug_mode = false;
+  curr_step = 0;
 }
 
 void draw() {
@@ -76,7 +93,8 @@ void draw() {
       
       stroke(0);
       if ( ( (j+i) % 2 ) == 1 ) {
-        fill(150);
+//        fill(200);
+        fill(243, 229, 171);
       } else {
         fill(255);
       }
@@ -88,19 +106,22 @@ void draw() {
       if (board[i][j] == 1) {
 //        image(queen_img, x, y, side, side);
         if (is_board_solved) {
-          fill(0, 255, 0);
+          shape(queen_img_green, x + side/4, y, side/2, side);
         } else {
-          fill(0);
+          shape(queen_img_black, x + side/4, y, side/2, side);
         }
-        ellipse(x + side/2, y + side/2, side/1.25, side/1.25);
+//        ellipse(x + side/2, y + side/2, side/1.25, side/1.25);
+//      shape(queen_img_black, x + side/4, y, side/2, side);
       
-    } else if (board[i][j] == -1) {
+      } else if (board[i][j] == -1) {
         fill(255, 0, 0);
         rect(x, y, side, side);
 //        delay(10000);
         if (millis() > time + 500 ) {
           board[i][j] = 0;
         }
+      } else if (board[i][j] == -2) {
+        shape(queen_img_red, x + side/4, y, side/2, side);
       }
     }
   }
@@ -108,6 +129,29 @@ void draw() {
 
 void keyPressed() {
   // 48 is ASCII value for '0'
+  
+  // TEST DEBUG //
+  
+  if (key == 'd') {
+    if (!is_debug_mode) {
+      enterDebugMode();
+    } else {
+      exitDebugMode();
+    }
+  }
+  
+  if (key == 'f') {
+    stepForward();
+  }
+  
+  if (key == 'b') {
+    stepBack();
+  }
+  
+  if (is_debug_mode) {
+    return;
+  }
+  
   int val = int(key) - 48;
 //  println(key);
 //  println(val);
@@ -163,6 +207,10 @@ void keyPressed() {
 }
 
 void mouseClicked() {
+  
+  if (is_debug_mode) {
+    return;
+  }
 //  mouse_click_x = mouseX;
 //  mouse_click_y = mouseY;
 //  int col = floor(mouse_click_x / side);
@@ -172,9 +220,9 @@ void mouseClicked() {
   handleMove(row, col);
   
   // TEST //
-  if (javascript != null) {
-    javascript.test_string("test 123");
-  }
+//  if (javascript != null) {
+//    javascript.log_Processing_error("test 123");
+//  }
   
 }
   // want to flip sign on mouse click, not just set true
@@ -219,9 +267,9 @@ void mouseClicked() {
 
 void handleMove(int row, int col) {
   
-  if (javascript != null) {
-    javascript.test_string("test 123");
-  }
+//  if (javascript != null) {
+//    javascript.log_Processing_error("test 123");
+//  }
   
   if (board[row][col] == 0) {
     
@@ -231,6 +279,9 @@ void handleMove(int row, int col) {
         is_board_solved = true;
       }
     } else {
+//      if (javascript != null) {
+//          javascript.log_Processing_error("ERROR: You can't place a queen on the same horizontal, vertical, or diagonal of another queen.");
+//      }
       board[row][col] = -1;
       time = millis();
     }
@@ -246,6 +297,11 @@ boolean isMoveValid(int row, int col) {
   
   for (int i=0; i<rows; i++) {
     if (board[i][col] == 1) {
+      
+      // send error message to user
+      if (javascript != null) {
+        javascript.log_Processing_error("ERROR: You can't place a queen in the same column as another queen.");
+      }
       return false;
     }
   }
@@ -254,6 +310,11 @@ boolean isMoveValid(int row, int col) {
   
   for (int j=0; j<cols; j++) {
     if (board[row][j] == 1) {
+      
+      // send error message to user
+      if (javascript != null) {
+        javascript.log_Processing_error("ERROR: You can't place a queen in the same row as another queen.");
+      }
       return false;
     }
   }
@@ -264,6 +325,10 @@ boolean isMoveValid(int row, int col) {
   int i = row;
   while (i < rows && j < cols) {
     if (board[i][j] == 1) {
+      // send error message to user
+      if (javascript != null) {
+        javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
+      }
       return false;
     }
     i++;
@@ -274,6 +339,10 @@ boolean isMoveValid(int row, int col) {
   i = row;
   while (i >= 0 && j >=0) {
     if (board[i][j] == 1) {
+      // send error message to user
+      if (javascript != null) {
+        javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
+      }
       return false;
     }
     i--;
@@ -284,6 +353,10 @@ boolean isMoveValid(int row, int col) {
   i = row;
   while (i < rows && j >=0) {
     if (board[i][j] == 1) {
+      // send error message to user
+      if (javascript != null) {
+        javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
+      }
       return false;
     }
     i++;
@@ -294,6 +367,10 @@ boolean isMoveValid(int row, int col) {
   i = row;
   while (i >= 0 && j < cols) {
     if (board[i][j] == 1) {
+      // send error message to user
+      if (javascript != null) {
+        javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
+      }
       return false;
     }
     i--;
@@ -330,7 +407,7 @@ void solveBoard() {
   clearBoard();
   animation_queue.clear();
   solveBoard_helper(0);
-  if (is_animation) {
+  if (is_animation || is_debug_mode) {
 //    println("solved for animation");
     clearBoard();
   } else {
@@ -364,12 +441,12 @@ void solveBoard_helper(int row) {
   do {
     if ( col < (cols - 1) ) {
       if (col != -1) {
-        addMoveFrame(row, col);
+        addMoveFrame(row, col, animation_queue);
       }
       col++;
-      addMoveFrame(row, col);
+      addMoveFrame(row, col, animation_queue);
     } else {
-      addMoveFrame(row, col);
+      addMoveFrame(row, col, animation_queue);
 //      if (row > 0) {
 //      while (millis() > time + 500 ) {}
       solveBoard_helper(row - 1);
@@ -435,7 +512,7 @@ class MoveFrame {
   int col;
 }
 
-void addMoveFrame(int row, int col) {
+void addMoveFrame(int row, int col, ArrayList<MoveFrame> queue) {
   MoveFrame move_frame = new MoveFrame();
   
 //  move_frame.prev_row = prev_row;
@@ -444,7 +521,7 @@ void addMoveFrame(int row, int col) {
   move_frame.row = row;
   move_frame.col = col;
   
-  animation_queue.add(move_frame);
+  queue.add(move_frame);
 //  println("new frame added");
 }
 
@@ -471,6 +548,119 @@ void animate(ArrayList<MoveFrame> animation_queue) {
   handleMove(row, col);
 }
 
+//void debug(ArrayList<MoveFrame> animation_queue) {
+//  
+//}
+
+///////////////// DEBUG MODE /////////////////////////
+
+// FIX USER INPUT - IE HOW TO SOLVE FROM CODEMIRROR
+void stepForward() {
+  if ( curr_step < (debug_queue.size() - 1) ) {
+    curr_step = curr_step + 1;
+    MoveFrame move_frame = debug_queue.get(curr_step);
+    int row = move_frame.row;
+    int col = move_frame.col;
+    placeQueen(row, col);
+  }
+  
+}
+
+void stepBack() {
+  if (curr_step > 0) {
+    MoveFrame move_frame = debug_queue.get(curr_step);
+    int row = move_frame.row;
+    int col = move_frame.col;
+    placeQueen(row, col);
+    curr_step = curr_step - 1;
+  }
+}
+
+void enterDebugMode() {
+  if (debug_queue.size() > 0) {
+    is_debug_mode = true;
+  } else {
+    if (javascript != null) {
+      javascript.log_Processing_error("ERROR: You have to run your code before you can debug it.");
+    }
+  }
+//  solveBoard();
+}
+
+void exitDebugMode() {
+  is_debug_mode = false;
+//  clearBoard();
+}
+
+//////////////// - END DEBUG MODE - ////////////////
+
+//////////////// - RUN MODE - ////////////////
+
+void enterRunMode() {
+  debug_queue.clear();
+  is_run_mode = true;
+}
+
+void exitRunMode() {
+  is_run_mode = false;
+}
+
+//////////////// - USER CODE INTERFACE - ////////////////
+
+// this function should place queen regardless of 
+// correctness, but color it red if it's wrong
+
+// FIGURE OUT TO PUT INTO DEBUG QUEUE - MAYBE COMBINE PLACE AND
+// REMOVE FUNCTIONS...
+void placeQueen(int row, int col) {
+  if (board[row][col] == 0) {
+    if ( isMoveValid(row, col) ) {
+      board[row][col] = 1;
+    } else {
+      board[row][col] = -2;
+    }
+  } else {
+    if (javascript != null) {
+      javascript.log_Processing_error("ERROR: There's already a queen on the square.");
+    }
+  }
+  
+  if (is_run_mode) {
+    addMoveFrame(row, col, debug_queue);
+  }
+}
+
+void removeQueen(int row, int col) {
+  if (board[row][col] != 0) {
+    board[row][col] = 0;
+  } else {
+    if (javascript != null) {
+      javascript.log_Processing_error("ERROR: There's no queen on the square to be removed.");
+    }
+  }
+}
+
+boolean isQueen(int row, int col) {
+  if (board[row][col] != 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+int getNumCols() {
+  return cols;
+}
+
+int getNumRows() {
+  return rows;
+}
+
+//////////////// - END USER CODE INTERFACE - ////////////////
+
+// step_forward
+// step_back
+
 //void pushMoveToList() {
 //  
 //}
@@ -483,7 +673,7 @@ void animate(ArrayList<MoveFrame> animation_queue) {
 //////////////// - TESTING - ////////////////
 
 
-//String test_string() {
+//String log_Processing_error() {
 //  String string_1 = "test 123";
 //  return string_1;
 //}
