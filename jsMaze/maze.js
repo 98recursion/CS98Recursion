@@ -216,8 +216,8 @@ function Maze(squareSize)
 
 		if(this.isWall(x, y)) {
 
-			processing.color(0, 100, 0);
-			processing.fill(0, 100, 0);
+			//processing.color(0, 100, 0);
+			processing.fill(13, 112, 22);
 			processing.rect(sx, sy, this.squareSize, this.squareSize);
 	
 			// processing.textSize(this.squareSize / 2);
@@ -225,16 +225,16 @@ function Maze(squareSize)
 
 			// processing.text(1, (sx + this.squareSize / 2), (sy + this.squareSize / 2)) ;
 		} else if( this.isStart(x, y)){
-			processing.color(0, 100, 0);
-			processing.fill(255, 0, 0);
+			//processing.color(0, 100, 0);
+			processing.fill(237, 221, 29);
 			processing.rect(sx, sy, this.squareSize, this.squareSize);
 
 		} else if( this.isGoal( x, y)){
-			processing.color(0, 100, 0);
-			processing.fill(0, 0, 255);
+			//processing.color(0, 100, 0);
+			processing.fill(22, 117, 168);
 			processing.rect(sx, sy, this.squareSize, this.squareSize);
 		} else {
-			processing.color(0, 0, 0);
+			//processing.color(0, 0, 0);
 			processing.fill(255, 255, 255);
 			processing.rect(sx, sy, this.squareSize, this.squareSize);
 
@@ -251,8 +251,8 @@ function Maze(squareSize)
 			var y = this.path[i][1];
 			var sx = x * this.squareSize;
 			var sy = y * this.squareSize;
-			processing.color(0, 100, 0);
-			processing.fill(0, 255, 0);
+			//processing.color(0, 100, 0);
+			processing.fill(242, 126, 32);
 			processing.rect(sx, sy, this.squareSize, this.squareSize);
 
 			this.drawDistance( processing, x, y);
@@ -304,7 +304,8 @@ function sketchMaze(processing) {
   		maze.updateDist( x, y);
   	}
 
-  	processing.keyPressed = function(){
+  	processing.keyPressed = function( ){
+  		console.log( processing.key );
   		maze.assignDist();
   	}
 
