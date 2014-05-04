@@ -33,7 +33,7 @@ em {
 
 article {
  
-  margin: 0 0 0 160px;
+  /*margin: 0 0 0 160px;
   padding: 0px 0px 0px 0px;
   background: #3d3d3d;
   z-index: 2;
@@ -42,7 +42,7 @@ article {
   left:50px;
   min-height: 0%;
   box-sizing: border-box;
-  -moz-box-sizing: border-box;
+  -moz-box-sizing: border-box;*/
 }
 
 #nav {
@@ -116,16 +116,6 @@ section.first {
   margin-top: 0;
 }
 
-#demo {
-  position: relative;
-}
-
-#demolist {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  z-index: 25;
-}
 
 #bankinfo {
   text-align: left;
@@ -231,24 +221,26 @@ body {
 		color: #cdcdcd; text-decoration: underline;
 	}
 	h1 {
-	    font-family: Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
+	    font-family: Comic Sans MS, cursive, Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
 		letter-spacing: 0.1em;
-		//margin-bottom: 1em; font-size: 1.65em;
-		background-color: #024E68
+        font-size: 4em;
+		background-color: #024E68;
+        width: 78%;
+    	height: 8%;
+    	position: fixed;
+             left: 3.3em;
+    
 	}
-	#header{
-	width: 78%; 
-	height: 12%;
-	position: fixed;
-		top: -.5em;
-		left: 8em;
+
+	.header{
+	top: -.7em;
+    text-align: center;
+    padding-top: 2%
 	}
-	#footer{
-	width: 78%; 
-	height: 7%;
-	position: fixed;
-		top: 37.3em;
-		left: 8em;
+
+	.footer{
+	   height: 7%;
+	   top: 15em;
 	}
 	canvas {
 		display: block; 
@@ -257,6 +249,7 @@ body {
 	#sketch {
 		margin-bottom: 1em; 
 		width: 51.5em; min-width: 0em; overflow: auto;
+		height: 30em;
 		background-color: #3d3d3d;
 		position: fixed;
 		top: 11em;
@@ -269,8 +262,7 @@ body {
       	font-size:1.33em;
 		width: 34em;
 		viewportMargin: 10;
-		top: 6.5em;
-		left: 10em;
+
 		
 		
       }
@@ -282,7 +274,7 @@ body {
 		background-color: white;
 		position: fixed;
 		top: 41.3em;
-		right:12.5em;
+		right:12.2em;
 	}
 	
 	button {
@@ -303,9 +295,11 @@ body {
 		font-size: 1.25em;
         font-weight: bold;
 	}
+	
 	button:hover{
 	color: #024E68;
 	}
+	
 	.tohButton {
 		/*background: -webkit-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Safari 5.1 to 6.0 */
 		/*background: -moz-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Firefox 3.6 to 15 */
@@ -313,10 +307,62 @@ body {
 		/*color: #BBB;*/
 		position: fixed;
 		top: 35em;
+		width: 20.7em;
 		
 	}
-
-    .debugButton {
+	.tohButton:hover{
+	color:#30C0CD;
+	}
+    .codeButton{
     position: fixed;
-    right: 75.2em;
+	top: 35em;
+    width: 37.1em;
     }
+    #clearButton{
+    right: 53.2em;
+    }
+    #clearButton:hover{
+    color:#FF0D00;
+    }
+
+    .demoButton {
+    position: fixed;
+    left: 10.5em;
+    }
+    .demoButton:hover{
+    color:#ff7800;
+    }
+    #runButton{
+    top: 40em;
+    }
+    #runButton:hover{
+    color:#00C618;
+    }
+    #debugButton{
+    top: 42em;
+    }
+    #debugButton:hover{
+    color:#00C618;
+    }
+    #resetButton{
+    top: 44em;
+    }
+    #resetButton:hover{
+    color:#30C0CD;
+    }
+    #stepButton{
+    top: 46em;
+    }
+    #backButton{
+    top: 48em;
+    }
+    #codeBox{
+    background: #BBB;
+    width:36.75%;
+    height:56%;
+    position: fixed;
+    left:13.3em;
+    top: 8em;
+    
+    }
+
