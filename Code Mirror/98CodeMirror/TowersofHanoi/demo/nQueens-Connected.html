@@ -53,40 +53,34 @@
 
 function solveBoard(row) {	
 
-  var col = -1;
-  for (var j=0; j<getNumCols(); j++) {
-    if (isQueen(row, j)) {
-      col = j;
-      removeQueen(row, j);
-      break;
-    }
-  }
+  // *base case* if queens are sucessfully placed on all rows
+  if ( row >= getNumRows() )
+    return true;
   
-  do {
-    if ( col < (getNumCols() - 1) ) {
-      col++;
+  // at this row, consider each column on the board
+  for (var i = 0; i < getNumCols(); i++) {
     
-    } else {
-      solveBoard(row - 1);
+    // try to place a queen at [row, i]
+    if ( isMoveValid(row, i) ) {
+      placeQueen(row, i);
       
-      if (isBoardSolved()) {
-        return;
-      }
-    }
+      // *recurse* to place queens on other rows
+      if ( solveBoard(row + 1) )
+        return true;
     
-  } while (!isMoveValid(row, col));
+      // backtrack if placing a queen at [row, i] 
+      // did not solve the board
+      removeQueen(row, i);
+    }
+  } 
   
-  placeQueen(row, col);
-  if (isBoardSolved()) {
-    return;
-  
-  } else {
-    solveBoard(row + 1);
-  }
-  
+  // at this row, no column can take a queen, so have to backtrack
+  return false;
 }
 
 solveBoard(0);
+
+
 	</textarea>
 	<button type=button onclick="clearInput()">clear code</button> 
 
