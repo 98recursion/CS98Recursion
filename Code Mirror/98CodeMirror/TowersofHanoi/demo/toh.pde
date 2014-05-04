@@ -426,6 +426,10 @@ class Peg {
   Disc topDisc() {
     return discs[top_index];
   }
+  
+  int topDiscSize(){
+	return topDisc().size;
+  }
 
   //if peg is legal, every disc on peg is smaller than the disc below it 
   boolean pegIsLegal() {
@@ -548,6 +552,12 @@ void solve_hanoi(int n, int start_peg, int end_peg) {
     move_disc(n, start_peg, end_peg);
     // solve one disk smaller problem of moving the remaining disks, which are on the spare peg, to the end peg
     solve_hanoi(n - 1, spare_peg, end_peg);
+  }
+}
+
+void checkDiscTopsPeg(int n, int from){
+  if (n != peg[from-1].topDiscSize()){
+  report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
   }
 }
 
