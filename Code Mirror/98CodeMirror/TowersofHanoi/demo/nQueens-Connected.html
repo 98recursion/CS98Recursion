@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8"/> <link rel="stylesheet" href="../doc/docstest.css">
+	<!-- <meta charset="utf-8"/> <link rel="stylesheet" href="../doc/docstest.css"> -->
 	<title>nQueens Demo</title>
 	<link rel="icon"  type="image/x-icon" href="./favicon.ico"/>
 
@@ -50,6 +50,43 @@
     <article style="width: 660px; height: 600px;">
     <div>
 	<textarea id="codeInputPane" name="code" runnable="true" mode="javascript">
+
+function solveBoard(row) {	
+
+  var col = -1;
+  for (var j=0; j<getNumCols(); j++) {
+    if (isQueen(row, j)) {
+      col = j;
+      removeQueen(row, j);
+      break;
+    }
+  }
+  
+  do {
+    if ( col < (getNumCols() - 1) ) {
+      col++;
+    
+    } else {
+      solveBoard(row - 1);
+      
+      if (isBoardSolved()) {
+        return;
+      }
+    }
+    
+  } while (!isMoveValid(row, col));
+  
+  placeQueen(row, col);
+  if (isBoardSolved()) {
+    return;
+  
+  } else {
+    solveBoard(row + 1);
+  }
+  
+}
+
+solveBoard(0);
 	</textarea>
 	<button type=button onclick="clearInput()">clear code</button> 
 
@@ -60,7 +97,7 @@
 	<div>
 	<textarea id="demo"  style="width:605px; height:140px; overflow-y:scroll;" readonly></textarea>
 	</div>
-	<p><button type=button onclick="run()">run</button>
+	<p><button type=button onclick="wrapRun()">run</button>
 	<button type=button onclick="reset()">reset</button> 
 	<button type=button onclick="debug()">debug</button> 
 	<button type=button onclick="step()">step forward</button> 

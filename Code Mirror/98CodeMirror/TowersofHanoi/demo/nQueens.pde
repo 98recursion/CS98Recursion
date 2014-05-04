@@ -6,6 +6,8 @@
 // DONE 5. Debug queue/ animation
 // 6. Semantic debugging - turn queens red
 // 7. Implement interface with JS for running user code
+// 8. While animation is running, don't let user change
+// anything and also allow them to stop by pressing a again
 
 /// Javascript interface ///
 
@@ -73,7 +75,11 @@ void setup() {
 
 //glob_string = "test 123";
   is_debug_mode = false;
+  debug_queue = new ArrayList<MoveFrame>();
   curr_step = 0;
+  
+  is_run_mode = false;
+  
 }
 
 void draw() {
@@ -93,15 +99,12 @@ void draw() {
       
       stroke(0);
       if ( ( (j+i) % 2 ) == 1 ) {
-//        fill(200);
         fill(243, 229, 171);
       } else {
         fill(255);
       }
       
       rect(x, y, side, side);
-//      queen_img.resize(side, side);
-//      image(queen_img, 0, 0, side, side);
       
       if (board[i][j] == 1) {
 //        image(queen_img, x, y, side, side);
@@ -110,8 +113,6 @@ void draw() {
         } else {
           shape(queen_img_black, x + side/4, y, side/2, side);
         }
-//        ellipse(x + side/2, y + side/2, side/1.25, side/1.25);
-//      shape(queen_img_black, x + side/4, y, side/2, side);
       
       } else if (board[i][j] == -1) {
         fill(255, 0, 0);
@@ -299,7 +300,7 @@ boolean isMoveValid(int row, int col) {
     if (board[i][col] == 1) {
       
       // send error message to user
-      if (javascript != null) {
+      if (!is_run_mode && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen in the same column as another queen.");
       }
       return false;
@@ -312,7 +313,7 @@ boolean isMoveValid(int row, int col) {
     if (board[row][j] == 1) {
       
       // send error message to user
-      if (javascript != null) {
+      if (!is_run_mode && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen in the same row as another queen.");
       }
       return false;
@@ -326,7 +327,7 @@ boolean isMoveValid(int row, int col) {
   while (i < rows && j < cols) {
     if (board[i][j] == 1) {
       // send error message to user
-      if (javascript != null) {
+      if (!is_run_mode && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
       }
       return false;
@@ -340,7 +341,7 @@ boolean isMoveValid(int row, int col) {
   while (i >= 0 && j >=0) {
     if (board[i][j] == 1) {
       // send error message to user
-      if (javascript != null) {
+      if (!is_run_mode && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
       }
       return false;
@@ -354,7 +355,7 @@ boolean isMoveValid(int row, int col) {
   while (i < rows && j >=0) {
     if (board[i][j] == 1) {
       // send error message to user
-      if (javascript != null) {
+      if (!is_run_mode && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
       }
       return false;
@@ -368,7 +369,7 @@ boolean isMoveValid(int row, int col) {
   while (i >= 0 && j < cols) {
     if (board[i][j] == 1) {
       // send error message to user
-      if (javascript != null) {
+      if (!is_run_mode && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the same diagonal as another queen.");
       }
       return false;
@@ -613,6 +614,7 @@ void exitRunMode() {
 // FIGURE OUT TO PUT INTO DEBUG QUEUE - MAYBE COMBINE PLACE AND
 // REMOVE FUNCTIONS...
 void placeQueen(int row, int col) {
+  
   if (board[row][col] == 0) {
     if ( isMoveValid(row, col) ) {
       board[row][col] = 1;
@@ -625,12 +627,13 @@ void placeQueen(int row, int col) {
     }
   }
   
-  if (is_run_mode) {
-    addMoveFrame(row, col, debug_queue);
-  }
+//  if (is_run_mode) {
+//    addMoveFrame(row, col, debug_queue);
+//  }
 }
 
 void removeQueen(int row, int col) {
+  
   if (board[row][col] != 0) {
     board[row][col] = 0;
   } else {
@@ -638,6 +641,7 @@ void removeQueen(int row, int col) {
       javascript.log_Processing_error("ERROR: There's no queen on the square to be removed.");
     }
   }
+
 }
 
 boolean isQueen(int row, int col) {
