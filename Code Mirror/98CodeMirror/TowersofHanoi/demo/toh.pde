@@ -23,11 +23,12 @@ color DISC_WRONG = color(255, 13, 0); //red
 color DISC_RIGHT = color(255, 154, 64); //light orange
 color DISC_WIN = color(0, 198, 24); //green
 
-int PEG_WIDTH, PEG_HEIGHT, PEG_BASE, BASE_SIXTH;
+int MAX_DISCS = 9;
+
+int peg_width, peg_height, peg_base, base_sixth;
 int T1_L, T1_C, T1_R, T2_L, T2_C, T2_R, T3_L, T3_C, T3_R;
 int total_discs, disc_height, disc_width_per_size;
 Disc inHand = null;
-int MAX_DISCS;
 boolean solve;
 ArrayList<Move> queue;
 ArrayList<String> report;
@@ -44,26 +45,39 @@ float xOffset = 0.0;
 float yOffset = 0.0;
 
 void setTotalDiscs(int total) {
+  
   total_discs = total;
-  // disc_height  = PEG_HEIGHT / total_discs or less, is height of one disc  
-  // disc_height = ((PEG_HEIGHT - PEG_WIDTH) / total_discs) - (height/100);  
-  int disc_height_unconstrained = ((PEG_HEIGHT - PEG_WIDTH) / total_discs) - (height/100);
+  
+  if (total_discs <= 0) {
+    report.add("Error: Disc total is too small. Total number of discs must be between 1 and "+MAX_DISCS+".");
+    total_discs = 1;
+  } else if (total_discs > MAX_DISCS) {
+    report.add("Error: Disc total is too large. Total number of discs must be between 1 and "+MAX_DISCS+".");
+    total_discs = MAX_DISCS;
+  } else {
+    total_discs = total;
+  }
+  
+  // disc_height  = peg_height / total_discs or less, is height of one disc  
+  // disc_height = ((peg_height - peg_width) / total_discs) - (height/100);  
+  int disc_height_unconstrained;
+  disc_height_unconstrained = ((peg_height - peg_width) / total_discs) - (height/100);
   //make height of 1 or 2 lone discs no larger than heights in a stack of 6  
-  disc_height = min(disc_height_unconstrained, ((PEG_HEIGHT - PEG_WIDTH) / 6) - (height/100));  
+  disc_height = min(disc_height_unconstrained, ((peg_height - peg_width) / 6) - (height/100));  
 
-  //disc_width_per_size = total disc_width / size, is between PEG_WIDTH and BASE_SIXTH
-  //disc_width_per_size = (BASE_SIXTH * 2) / total_discs;
-  //disc_width_per_size = ((BASE_SIXTH * 2) - PEG_WIDTH) / total_discs;
+  //disc_width_per_size = total disc_width / size, is between peg_width and base_sixth
+  //disc_width_per_size = (base_sixth * 2) / total_discs;
+  //disc_width_per_size = ((base_sixth * 2) - peg_width) / total_discs;
 
   //init three pegs, no discs
   peg[0] = new Peg(1, T1_C);
   peg[1] = new Peg(2, T2_C);
   peg[2] = new Peg(3, T3_C);
 
-  //initialize discs on peg[0]/ peg 1 / T1_C
+  //initialize discs on peg[0]/ peg #1 / T1_C
   for (int i = total_discs - 1; i >= 0; i--) {
     // Disc(center_x, top_y, size, peg)
-    peg[0].push(new Disc(T1_C, height - PEG_WIDTH - (disc_height * (total_discs - i)), i+1));
+    peg[0].push(new Disc(T1_C, height - peg_width - (disc_height * (total_discs - i)), i+1));
     //println(peg[0].discs);   
     //println("top_index: "+ peg[0].top_index);
   }
@@ -84,30 +98,28 @@ void decreaseTotalDiscs() {
 }
 
 void setup() {
-  size(580, 350); //size(650, 400)
+  size(570, 340);//size(580, 350); //size(650, 400)
   queue = new ArrayList<Move>();
   report = new ArrayList<String>();
   solve = false;
 
-  PEG_WIDTH = width/20; //width of peg spire
-  //PEG_HEIGHT = height - PEG_WIDTH * 3; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
-  PEG_HEIGHT = height - PEG_WIDTH * 2 ; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
-  PEG_BASE = width - (2 * PEG_WIDTH); //width of peg base. base height = peg width
-  BASE_SIXTH = PEG_BASE / 6 ;//maximum size of one disc
+  peg_width = width/20; //width of peg spire
+  //peg_height = height - peg_width * 3; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
+  peg_height = height - peg_width * 2 ; //highest y-coord of the peg, has gap of 3 peg-width above top of screen
+  peg_base = width - (2 * peg_width); //width of peg base. base height = peg width
+  base_sixth = peg_base / 6 ;//maximum size of one disc
 
-  T1_L = PEG_WIDTH; //peg 1 left
-  T1_C = PEG_WIDTH + BASE_SIXTH; //peg 1 center 
-  T1_R = PEG_WIDTH + BASE_SIXTH * 2; //peg 1 right / peg 2 left border
-  T2_C = PEG_WIDTH + PEG_BASE / 2; //peg 2 center
-  T3_L = PEG_WIDTH + BASE_SIXTH * 4; //peg 2 right / peg 3 left border
-  T3_C = PEG_WIDTH + BASE_SIXTH * 5; //peg 3 center
-  T3_R = PEG_WIDTH + PEG_BASE; //peg 3 right border
+  T1_L = peg_width; //peg 1 left
+  T1_C = peg_width + base_sixth; //peg 1 center 
+  T1_R = peg_width + base_sixth * 2; //peg 1 right / peg 2 left border
+  T2_C = peg_width + peg_base / 2; //peg 2 center
+  T3_L = peg_width + base_sixth * 4; //peg 2 right / peg 3 left border
+  T3_C = peg_width + base_sixth * 5; //peg 3 center
+  T3_R = peg_width + peg_base; //peg 3 right border
 
   //sets # of discs and updates disc's height and width accordingly
-  setTotalDiscs(3); //best between 3 and 10 
-
-  MAX_DISCS = 10;
-
+  setTotalDiscs(3); //best between 3 and 9
+  
   wait = 1000;
 
   /*
@@ -128,10 +140,10 @@ void draw() {
 
   //peg base in background
   fill(PEG); //brown
-  rect(PEG_WIDTH, height - (PEG_WIDTH), width - (2 * PEG_WIDTH), 50); //peg base
-  rect(T1_C - PEG_WIDTH/2, height - PEG_HEIGHT, PEG_WIDTH, PEG_HEIGHT - PEG_WIDTH, 30, 30, 0, 0);
-  rect(T2_C - PEG_WIDTH/2, height - PEG_HEIGHT, PEG_WIDTH, PEG_HEIGHT - PEG_WIDTH, 30, 30, 0, 0);
-  rect(T3_C - PEG_WIDTH/2, height - PEG_HEIGHT, PEG_WIDTH, PEG_HEIGHT - PEG_WIDTH, 30, 30, 0, 0);
+  rect(peg_width, height - (peg_width), width - (2 * peg_width), 50); //peg base
+  rect(T1_C - peg_width/2, height - peg_height, peg_width, peg_height - peg_width, 30, 30, 0, 0);
+  rect(T2_C - peg_width/2, height - peg_height, peg_width, peg_height - peg_width, 30, 30, 0, 0);
+  rect(T3_C - peg_width/2, height - peg_height, peg_width, peg_height - peg_width, 30, 30, 0, 0);
 
   stroke(0);
 
@@ -322,7 +334,7 @@ class Disc {
     x = dx; //centermost x
     y = dy; // uppermost y
     size = ds;
-    disc_width = PEG_WIDTH + ((BASE_SIXTH * 2) - PEG_WIDTH) / total_discs * size;
+    disc_width = peg_width + ((base_sixth * 2) - peg_width) / total_discs * size;
     //disc_height defined in setTotalDiscs()
     prevPeg = null;
   }
@@ -343,9 +355,9 @@ class Disc {
   void draw() {
     //top x corner with disc width offset, top y, disc width, disc_height
 
-    //float drawWidth =  constrain(disc_width_per_size * size, PEG_WIDTH + 2, BASE_SIXTH * 2);
-    //int drawWidth = (BASE_SIXTH * 2 - disc_width_per_size) * size;
-    // PEG_WIDTH + 2, BASE_SIXTH * 2 ;
+    //float drawWidth =  constrain(disc_width_per_size * size, peg_width + 2, base_sixth * 2);
+    //int drawWidth = (base_sixth * 2 - disc_width_per_size) * size;
+    // peg_width + 2, base_sixth * 2 ;
 
     //rect(x, y, width, height, topleftradius, toprightradius, brradius, blradius)
     //rect(x - (drawWidth)/2, y, drawWidth, disc_height); 
@@ -353,17 +365,17 @@ class Disc {
     int discX = x - (disc_width)/2;
     int discY = y;
 
-	//disc
+    //disc
     rect(discX, discY, disc_width, disc_height, 15, 15, 15, 15); 
 
     //shine
     noStroke();
     fill(255, 30);
     //ellipse(discX + disc_height/4, discY + disc_height/3, disc_height/2 - 5, disc_height/2);
-    rect(discX+10, discY+2, disc_width-40, disc_height-disc_height/3 -20, 15, 15, 15, 15); //top bar
-    rect(discX+disc_width-25, discY+2, disc_height-disc_height/3 -20, disc_height-disc_height/3 -20, 15, 15, 15, 15); //top dot
-    rect(discX+3, discY+2, disc_width - disc_height/3, disc_height-disc_height/3, 15, 15, 15, 15); //inner
-    rect(discX+3, discY+2, disc_width-5, disc_height-disc_height/6, 15, 15, 15, 15); //outer
+    rect(discX+10, discY+4, disc_width-40, 2*disc_height/3 - 20, 15, 15, 15, 15); //top bar
+    rect(discX+disc_width-25, discY+4, 2*disc_height/3 - 20, 2*disc_height/3 - 20, 15, 15, 15, 15); //top dot
+    rect(discX+3, discY+2, disc_width - disc_height/3, 2*disc_height/3, 15, 15, 15, 15); //inner
+    rect(discX+3, discY+2, disc_width-5, 5*disc_height/6, 15, 15, 15, 15); //outer
 
     //rect(discX+10, discY + disc_height- disc_height/4, disc_width-20, 5, 15, 15, 15, 15); 
 
@@ -413,6 +425,10 @@ class Peg {
 
   Disc topDisc() {
     return discs[top_index];
+  }
+  
+  int topDiscSize(){
+	return topDisc().size;
   }
 
   //if peg is legal, every disc on peg is smaller than the disc below it 
@@ -474,7 +490,7 @@ class Peg {
   }
 
   int y_by_index(int curr_index) {
-    return height - PEG_WIDTH - (disc_height * (curr_index + 1));
+    return height - peg_width - (disc_height * (curr_index + 1));
   }
 
   void draw() {
@@ -497,8 +513,8 @@ class Peg {
     }
 
     fill(PEGTEXT);
-    textSize(PEG_WIDTH);
-    text(peg_number, center_x, height - PEG_WIDTH / 5);
+    textSize(peg_width);
+    text(peg_number, center_x, height - peg_width / 5);
   }
 }
 
@@ -537,7 +553,13 @@ void solve_hanoi(int n, int start_peg, int end_peg) {
     // solve one disk smaller problem of moving the remaining disks, which are on the spare peg, to the end peg
     solve_hanoi(n - 1, spare_peg, end_peg);
   }
-}  
+}
+
+void checkDiscTopsPeg(int n, int from){
+  if (n != peg[from-1].topDiscSize()){
+  report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
+  }
+}
 
 void move_disc(int n, int from, int to) {
   Move m = new Move();

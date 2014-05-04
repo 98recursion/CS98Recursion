@@ -1,30 +1,41 @@
-
-  		var editor = CodeMirror.fromTextArea(document.getElementById("codeInputPane"), {
+var editor = CodeMirror.fromTextArea(document.getElementById("codeInputPane"), {
   		theme: "neat",
   		autofocus: true,
     	lineNumbers: true,
     	styleActiveLine: true,
     	matchBrackets: true,
-    	gutters: ["CodeMirror-lint-markers"],
-    	lint: true
+    	lint: true,
+    	gutters: ['CodeMirror-lint-markers', "CodeMirror-linenumbers"]
   		});
+
+  		// editor.on("gutterClick", function(cm, n) {
+  		// 	var info = cm.lineInfo(n);
+  		// 	cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+  		// });
+
+  		// function makeMarker() {
+  		// 	var marker = document.createElement("div");
+  		// 	marker.style.color = "#822";
+  		// 	marker.innerHTML = "●";
+  		// 	return marker;
+  		// }
 
 		////////////// Graphical Output  /////////////////
   		// var processingInstance;
-		var first_call;
+		// var first_call;
 
 		// -------------------- TEST --------------------
 
 		var bound = false;
+		// var processingInstance;
 		var processingInstance;
-		var pjs;
 
 		function bindJavascript() {
-			if (!pjs) {
-				pjs = Processing.getInstanceById('sketch');
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
 			}
-			if (pjs != null) {
-				pjs.bindJavascript(this);
+			if (processingInstance != null) {
+				processingInstance.bindJavascript(this);
 				bound = true;
 			}
 
@@ -33,6 +44,96 @@
 			}
 		}
 		bindJavascript();
+
+		function isMoveValid(row, col) {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+
+			return processingInstance.isMoveValid(row, col);
+
+			// var is_move_valid = processingInstance.isMoveValid(row, col);
+			// console.log(is_move_valid.toString());
+			// return is_move_valid;
+		}
+
+		function placeQueen(row, col) {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+
+			processingInstance.placeQueen(row, col);
+		}
+
+		function removeQueen(row, col) {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+			processingInstance.removeQueen(row, col);
+		}
+
+		function isQueen(row, col) {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+
+			return processingInstance.isQueen(row, col);
+		}
+
+		function isBoardSolved() {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+
+			return processingInstance.isBoardSolved();
+		}
+
+		function getNumCols() {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+
+			return processingInstance.getNumCols();
+		}
+
+		function getNumRows() {
+			if (!processingInstance) {
+				processingInstance = Processing.getInstanceById('sketch');
+			}
+
+			return processingInstance.getNumRows();
+		}
+
+
+		function enterDebugMode() {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+
+  			processingInstance.enterDebugMode();
+		}
+
+		function exitDebugMode() {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+
+  			processingInstance.exitDebugMode();
+		}
+
+
+		function wrapRun() {
+			if (!processingInstance) {
+  				processingInstance = Processing.getInstanceById('sketch');
+  			}
+
+  			processingInstance.enterRunMode();
+  			run();
+  			processingInstance.exitRunMode();
+		}
+
+
+
 
 		// ----------------------- END TEST -------------
   	// 	function move_disc(disc_number, from_peg, to_peg) {
@@ -43,13 +144,14 @@
   	// 		processingInstance.move_disc(disc_number, from_peg, to_peg);
 			// document.getElementById('demo').innerHTML += ("Move disk " + disc_number.toString() + " from peg " + from_peg.toString() + " to peg " + to_peg.toString() + ".\n"); 
   	// 	}
-  		function test_string(string_1) {
+  		function log_Processing_error(error_message) {
   		// var string_1;
 	  	// 	if (!processingInstance) {
 	  	// 		processingInstance = Processing.getInstanceById('sketch');
 	  	// 	}
 	  	// 	string_1 = processingInstance.glob_string;
-			console.log(string_1);
+			console.log(error_message);
+			printResult();
 		}
 	 
 	 //////////////////// Text-box Output /////////////////////////
@@ -114,23 +216,11 @@
 			reset();
 		}
 		
-		function increaseTotalQueens() {
-			if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-  			//processingInstance.increaseTotalQueens();
-		}
-		
-		function decreaseTotalQueens() {
-			if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-  			//processingInstance.dereaseTotalQueens();
-		}
-		
 	 	function run(){
 			// reset();
 			var content = editor.getValue();		
 			var result = eval(content);
 			printResult();
 		}
+
+		///////////// DEBUGGER TEST ////////////////////
