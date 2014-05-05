@@ -169,8 +169,10 @@ void animate(ArrayList<Move> queue) {
   int n = m.n;
   int to = m.to;
   int from = m.from;
-  report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
-  draw_disc(n, from, to);
+  if(checkDiscTopsPeg(n, from)){
+	report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
+	draw_disc(n, from, to);
+  }
   globalTime = millis();
 }
 
@@ -555,10 +557,12 @@ void solve_hanoi(int n, int start_peg, int end_peg) {
   }
 }
 
-void checkDiscTopsPeg(int n, int from){
+boolean checkDiscTopsPeg(int n, int from){
   if (n != peg[from-1].topDiscSize()){
   report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
+  return false;
   }
+  return true;
 }
 
 void move_disc(int n, int from, int to) {
