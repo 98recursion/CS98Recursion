@@ -182,8 +182,10 @@ void animate_immediate(ArrayList<Move> queue) {
   int n = m.n;
   int to = m.to;
   int from = m.from;
-  report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
-  draw_disc(n, from, to);
+  if(checkDiscTopsPeg(n, from)){
+	report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
+	draw_disc(n, from, to);
+  }
 }
 
 void animate_back(ArrayList<Move> queue) {
@@ -191,8 +193,10 @@ void animate_back(ArrayList<Move> queue) {
   int n = m.n;
   int from = m.to;
   int to = m.from;
-  report.add("Undo: Moving Disc "+n+" from Peg "+to+" to Peg "+from+".\n");
-  draw_disc(n, from, to);
+  if(checkDiscTopsPeg(n, from)){
+	report.add("Moving Disc "+n+" from Peg "+from+" to Peg "+to+".\n");
+	draw_disc(n, from, to);
+  }
 }
 
 //colors if inHand is legal addition to peg it is over, else red
@@ -559,8 +563,8 @@ void solve_hanoi(int n, int start_peg, int end_peg) {
 
 boolean checkDiscTopsPeg(int n, int from){
   if (n != peg[from-1].topDiscSize()){
-  report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
-  return false;
+	report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
+	return false;
   }
   return true;
 }
