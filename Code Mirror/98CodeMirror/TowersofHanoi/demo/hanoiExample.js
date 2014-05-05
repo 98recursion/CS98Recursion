@@ -72,23 +72,15 @@
   				processingInstance = Processing.getInstanceById('sketch');
   			}
   			processingInstance.setTotalDiscs(total);
-		}		
-		
-		function resetDiscs(){
-		if (!processingInstance) {
-  				processingInstance = Processing.getInstanceById('sketch');
-  			}
-			processingInstance.resetTotalDiscs();
 		}
-	 	
+		
 		function reset() {
 			if (!processingInstance) {
   				processingInstance = Processing.getInstanceById('sketch');
   			}
 			processingInstance.reset_queue();
+			processingInstance.resetTotalDiscs();
 			clearOutput();
-  			increaseTotalDiscs();
-			decreaseTotalDiscs();
 		}
 		
 		function debug(){
@@ -188,7 +180,7 @@
 			editor.clearGutter("gutterId"); //if you have gutters
 			reset();
 		}
-		
+		//var totalDiscs;
 	 	function run(){
 			if(myTime == null){
 				 myTime = setInterval(function(){postMyMessage()},100);
@@ -197,6 +189,8 @@
 			var content = editor.getValue();		
 			var result = eval(content);
 			printResult();
+			//alert(totalDiscs); //test
+			//setTotalDiscs(totalDiscs);
 		}
 		
 		function testError(){
