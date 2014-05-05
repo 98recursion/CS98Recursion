@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8"/> <link rel="stylesheet" href="../doc/docstest.css">
-	<title>Recursion Demo</title>
+	<title>Towers of Hanoi</title>
 	<link rel="icon"  type="image/x-icon" href="./favicon.ico"/>
 
 	<!-- Codemirror setup -->
@@ -29,13 +29,13 @@
 	<!-- Procssing setup -->
 	<script src="processing.js" type="text/javascript"></script>
 </head>
-	<h1 class="header">Towers of Hanoi</h1>
 	<body>
+	<h1 class="header">Towers of Hanoi</h1>
     <div id = "codeBox">
 		<textarea id="codeInputPane" name="code" type="text/javascript">
 /*---ADD SOLVE HANOI DIRECTIONS HERE---*/
-
-setTotalDiscs(3);
+var TotalDiscs = 3;
+setTotalDiscs(TotalDiscs);
 
 function solve_hanoi(n, start_peg, end_peg) {
 // the peg that's not the start or end peg
@@ -61,8 +61,9 @@ else {
 	}
 }
 
-solve_hanoi(3, 1, 3);
+solve_hanoi(TotalDiscs, 1, 3);
 		</textarea>	
+		<button class= "codeButton" id= "runButton" onclick="wrapRun()">run</button>
 		<button class= "codeButton" id= "clearButton" onclick="clearInput()">clear code</button>
 	</div>
 	
@@ -70,17 +71,16 @@ solve_hanoi(3, 1, 3);
 
 	<div id = "tohBox">
 		<canvas id="sketch" data-processing-sources="toh.pde"></canvas>
-		<button class= "tohButton" style = "right:32.2em;" onclick="decreaseTotalDiscs()">- discs</button>
-		<button class= "tohButton" style = "right:11.5em;" onclick="increaseTotalDiscs()">+ discs </button>
+		<button class= "tohButton" id= "decreaseButton" onclick="decreaseTotalDiscs()">- discs</button>
+		<button class= "tohButton" id= "increaseButton" onclick="increaseTotalDiscs()">+ discs </button>
 	</div>
 	
 	<div id = "outBox">
 		<textarea id="demo" readonly></textarea>
-		<button class= "demoButton" id= "runButton" onclick="wrapRun()">run</button>
-		<button class= "demoButton" id= "debugButton" onclick="debug()">debug</button>
 		<button class= "demoButton" id= "resetButton" onclick="reset()">reset</button>
-		<button class= "demoButton" id= "stepButton" style = "position:fixed; top:46em;" onclick="step()">step forward</button>
-		<button class= "demoButton" id= "backButton" style = "position:fixed; top:48em;" onclick="back()">step back</button>
+		<button class= "demoButton" id= "debugButton" onclick="debug()">debug</button>
+		<button class= "demoButton" id= "stepButton"  onclick="step()">step forward</button>
+		<button class= "demoButton" id= "backButton"  onclick="back()">step back</button>
 	</div>
 	
 	<h1 class= "footer" ></h1>

@@ -13,7 +13,7 @@
 //press 3 - 9 or 0 to init 3-9 or 10 discs
 //press - or + to decr or incr # of discs, between 1 and 10
 
-color BACKGROUND = color (170); //grey
+color BACKGROUND = color (235); //grey
 color PEG = color(82, 24, 17); //brown
 color PEGTEXT = color(0); //black
 color DISCTEXT = color(0, 180); //black, slightly transparent
@@ -98,7 +98,7 @@ void decreaseTotalDiscs() {
 }
 
 void setup() {
-  size(560, 340);//size(570, 340);//size(580, 350); //size(650, 400)
+  size(556, 340);//size(570, 340);//size(580, 350); //size(650, 400)
   queue = new ArrayList<Move>();
   report = new ArrayList<String>();
   solve = false;
