@@ -249,21 +249,19 @@ body {
 	#sketch {
 		margin-bottom: 1em; 
 		overflow: auto;
+        /*width: 50.5em;*/
 		background-color: #3d3d3d;
 		position: fixed;
 		top: 11em;
-		right:14.5em;
 	}
-	
+
+
 	.CodeMirror {
       	
       	border: .3em solid #E0E0E0; 
       	font-size:1.33em;
-		width: 34em;
+		width: 32.9em;
 		viewportMargin: 10;
-
-		
-		
       }
 
 	#demo { 
@@ -355,13 +353,28 @@ body {
     #backButton{
     top: 48em;
     }
+
     #codeBox{
     background: #BBB;
-    width:36.75%;
+    width:36%;
     height:56%;
     position: fixed;
     left:13.3em;
     top: 8em;
-    
+    padding: .5em;
+    border-style:solid;
+    border-color:#028E9B;
+    }
+
+    #tohBox{
+    background: #BBB;
+    width:40.25%;
+    height:56%;
+    position: fixed;
+    right:14.5em;
+    top: 8em;
+    padding: .5em;
+    border-style:solid;
+    border-color:#028E9B;
     }
 

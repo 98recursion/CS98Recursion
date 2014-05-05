@@ -98,7 +98,7 @@ void decreaseTotalDiscs() {
 }
 
 void setup() {
-  size(570, 340);//size(580, 350); //size(650, 400)
+  size(560, 340);//size(570, 340);//size(580, 350); //size(650, 400)
   queue = new ArrayList<Move>();
   report = new ArrayList<String>();
   solve = false;
