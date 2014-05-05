@@ -562,11 +562,16 @@ void solve_hanoi(int n, int start_peg, int end_peg) {
 }
 
 boolean checkDiscTopsPeg(int n, int from){
-  if (n != peg[from-1].topDiscSize()){
-	report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
-	return false;
-  }
-  return true;
+	if (peg[from-1].isEmpty()){
+		report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Peg "+ from +" is empty.\n");
+		return false;
+	}	
+	else if (n != peg[from-1].topDiscSize()){
+		report.add("Error: Cannot move Disc "+ n +" from Peg "+ from +" because Disc " + peg[from-1].topDiscSize()+ " is the top disc on Peg " + from + ".\n" );
+		return false;
+	}
+
+	return true;
 }
 
 void move_disc(int n, int from, int to) {
