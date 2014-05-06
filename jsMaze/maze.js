@@ -7,10 +7,20 @@ function Maze(squareSize)
 	this.squareSize = squareSize - ( squareSize % 2);
 	console.log( "SQUARE SIZE " + this.squareSize);
 
+	// this.walls = new Array(	1, 1, 1, 1, 1, 0, 1, 1,
+	// 						1, 0, 0, 0, 0, 0, 0, 1,
+	// 						1, 0, 1, 1, 1, 1, 0, 1,
+	// 						1, 1, 1, 0, 1, 0, 0, 1,
+	// 						1, 0, 1, 0, 1, 1, 0, 1,
+	// 						1, 0, 1, 0, 1, 0, 0, 1,
+	// 						1, 0, 0, 0, 0, 0, 0, 1,
+	// 						1, 1, 1, 1, 1, 1, 1, 1
+	// 					);
+
 	this.walls = new Array(	1, 1, 1, 1, 1, 0, 1, 1,
 							1, 0, 0, 0, 0, 0, 0, 1,
 							1, 0, 1, 1, 1, 1, 0, 1,
-							1, 1, 1, 0, 1, 0, 0, 1,
+							1, 0, 1, 0, 1, 0, 0, 1,
 							1, 0, 1, 0, 1, 1, 0, 1,
 							1, 0, 1, 0, 1, 0, 0, 1,
 							1, 0, 0, 0, 0, 0, 0, 1,
@@ -36,8 +46,11 @@ function Maze(squareSize)
 						[ 0, 1]
 					]
 
-	this.start = new Array( 5, 0);
-	this.goal = new Array ( 5, 5);
+	// this.start = new Array( 5, 0);
+	// this.goal = new Array ( 5, 5);
+
+	this.start = new Array( 3, 3);
+	this.goal = new Array ( 5, 0);
 
 	this.path;
 	this.animation;
@@ -129,7 +142,7 @@ function Maze(squareSize)
 		var queue = new Array();
 		
 		//Set the distance of the goal as zero and add the goal to the queue
-		this.setDist( this.goal[0], this.goal[0], 0 );
+		this.setDist( this.goal[0], this.goal[1], 0 );
 		queue.push( this.goal );
 
 		//Continue searching until the queue is empty or the start has been found.
@@ -157,7 +170,6 @@ function Maze(squareSize)
 				}
 			}
 		}
-		console.log( "counterrrr "+ counter );
 	}
 
 	this.isValidMove = function(x, y, newDist){
