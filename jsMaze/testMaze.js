@@ -1,16 +1,18 @@
+// Eliza Hanson and Devin Balkcom, May 2014
+
 
 // constructor for Maze objects
 //   squareSize:  the width/height in pixels of each square of the maze
+
 function Maze(squareSize)
 {
-	//Squaresize must be an even number for square edges to work.  Thus, substract the mod 2 from the squaresize total
-	this.squareSize = squareSize - ( squareSize % 2);
-	console.log( "SQUARE SIZE " + this.squareSize);
+
+	this.squareSize = squareSize;
 
 	this.walls = new Array(	1, 1, 1, 1, 1, 0, 1, 1,
 							1, 0, 0, 0, 0, 0, 0, 1,
 							1, 0, 1, 1, 1, 1, 0, 1,
-							1, 1, 1, 0, 1, 0, 0, 1,
+							1, 0, 1, 0, 1, 0, 0, 1,
 							1, 0, 1, 0, 1, 1, 0, 1,
 							1, 0, 1, 0, 1, 0, 0, 1,
 							1, 0, 0, 0, 0, 0, 0, 1,
@@ -36,11 +38,11 @@ function Maze(squareSize)
 						[ 0, 1]
 					]
 
-	this.start = new Array( 5, 0);
-	this.goal = new Array ( 5, 5);
+	this.start = new Array( 3, 3);
+	this.goal = new Array ( 5, 0);
 
+	this.startAssigned = true;
 	this.path;
-	this.animation;
 
 	this.isWall = function(x, y) {
 		var wallIndex = y * this.width + x;
@@ -59,17 +61,6 @@ function Maze(squareSize)
 		return ( x == this.goal[0]) && ( y == this.goal[1]);
 	}
 
-	this.resetPath = function (){
-		this.path = new Array();
-	}
-
-	this.resetDist = function(){
-		this.dist = new Array( this.height * this.width );
-		for (var i = 0; i < this.dist.length; i++) {
-			this.dist[i] = -1;
-		};
-	}
-
 	this.getDist = function(x, y){
 		var wallIndex = y * this.width + x;
 		return this.dist[wallIndex];
@@ -79,7 +70,6 @@ function Maze(squareSize)
 		var wallIndex = y * this.width + x;
 		return this.dist[wallIndex] = d;
 	}
-
 
 	this.updateDist = function( x, y){
 		//Dont update this if the square is a wall
@@ -103,7 +93,7 @@ function Maze(squareSize)
 
 	}
 	
-	//Loop through the adjacent squares, if any of them are assigned return the incremented value of the lowest one
+	//Loop through the adjacent squares, if any of them are assigned return the incremented value of the lowes one
 	this.isAssignable = function(x,y) {
 		var assgn = -1;
 		for (var i = 0; i < this.adjacency.length; i++) {
@@ -121,70 +111,12 @@ function Maze(squareSize)
 	}
 
 	this.assignDist = function(){
-
-		//Reset the distances
-		this.resetDist();
-
 		//queue holding squares to search
 		var queue = new Array();
 		
 		//Set the distance of the goal as zero and add the goal to the queue
  		this.setDist( this.goal[0], this.goal[0], 0 );
   		queue.push( this.goal );
-
-  		var counter = 0;
-
-  		//Continue searching until the queue is empty or the start has been found.
-  		while( queue.length != 0 ){
-  			//Pop the first element from the queue
-  			var arr = queue[0];
-  			queue.splice( 0, 1);
-
-  			var value = this.getDist(arr[0], arr[1]) + 1;
-
-
-
-  			//Check each of the elements next to the current one and add dist and to the queue if it is valid
-    		//A valid move happens if it is in the maze, not a wall, and not already labled
-    		for (var i = 0; i < this.adjacency.length; i++) {
-    			var adj = this.adjacency[i];
-    			var temp = [ (arr[0] + adj[0]), (arr[1] + adj[1]) ];
-    			if( this.isValidMove( temp[0], temp[1] ) ){
-    				this.setDist(temp[0], temp[1], value);
-    				queue.push( temp );
-
-    				counter++;
-
-    				if( this.isStart( temp[0], temp[1]) ){
-				  		console.log( "counterrrr "+ counter );
-
-    					return;
-    				}
-    			}
-
-    		}
-  		}
-  		console.log( "counterrrr "+ counter );
-	}
-
-	this.assignAnimationDist = function( anim ){
-
-		//Reset the distances
-		this.resetDist();
-
-		//queue holding squares to search
-		var queue = new Array();
-		
-		//Set the distance of the goal as zero and add the goal to the queue
- 		this.setDist( this.goal[0], this.goal[0], 0 );
-  		queue.push( this.goal );
-
-  		//Take the current dist, clone it and put it in an animateMaze object to store for later animation
-  		var mz = this.dist.slice(0);
-  		var a = new animateMaze( mz );
-  		anim.push( a );
-
-  		var counter = 0;
 
   		//Continue searching until the queue is empty or the start has been found.
   		while( queue.length != 0 ){
@@ -203,15 +135,7 @@ function Maze(squareSize)
     				this.setDist(temp[0], temp[1], value);
     				queue.push( temp );
 
-    				counter++;
-
-    				//Save this exploration state for animation
-    				mz = this.dist.slice(0);
-    				a = new animateMaze( mz );
-    				anim.push( a );
-
-    				if( this.isStart( temp[0], temp[1]) ){
-    					console.log( "counterere "+ counter);
+    				if( this.isGoal( temp[0], temp[1]) ){
     					return;
     				}
     			}
@@ -220,53 +144,19 @@ function Maze(squareSize)
   		}
 	}
 
-	this.isValidMove = function(x, y, newDist){
-		//See if in bounds, valid location, or already assigned in the current BFS
+	this.isValidMove = function(x, y){
+		//See if in bounds, valid location, or already assigned
 		return !( (! this.isSquare(x, y)) || ( this.isWall(x,y) == 1 ) || ( this.getDist(x, y) != -1 ) );
 	}
 
 	//Create an array with the path from the start to the goal.
 	this.createPath = function(){
-		this.path = new Array();
-		this.path.push( this.start );
+		var p = new Array();
+		p.push( this.start );
 		var tempVal = this.getDist(this.start[0], this.start[1]);
 
 		while( tempVal > 0 ){
-			var temp = this.path[this.path.length - 1];
-			tempVal = this.getDist( temp[0], temp[1]);
-
-
-			//console.log( "tempVAl "+ tempVal);
-
-			//Loop through the adjacent locations and look for one with a lower distance, add it to the array and break
-			for (var i = 0; i < this.adjacency.length; i++) {
-				var xTemp = temp[0] + this.adjacency[i][0];
-				var yTemp = temp[1] + this.adjacency[i][1];
-				// Only continue if this is a legal square
-				if( this.isSquare( xTemp, yTemp) ){
-					var td = this.getDist(xTemp, yTemp);
-					if( td != -1 && td < tempVal ){
-						var t = [ xTemp, yTemp ];
-						this.path.push( t );
-						tempVal = td;
-						break;
-					}
-				}
-
-			}
-
-		}
-	}
-
-
-	//Create an array with the path from the start to the goal.
-	this.createAnimationPath = function( anim ){
-		this.path = new Array();
-		this.path.push( this.start );
-		var tempVal = this.getDist(this.start[0], this.start[1]);
-
-		while( tempVal > 0 ){
-			var temp = this.path[this.path.length - 1];
+			var temp = p[p.length -1];
 			tempVal = this.getDist( temp[0], temp[1]);
 
 			//console.log( "tempVAl "+ tempVal);
@@ -280,20 +170,19 @@ function Maze(squareSize)
 					var td = this.getDist(xTemp, yTemp);
 					if( td != -1 && td < tempVal ){
 						var t = [ xTemp, yTemp ];
-						this.path.push( t );
+						p.push( t );
 						tempVal = td;
 						break;
 					}
 				}
 
-			}
-
+			};
 		}
-		var mz = this.dist.splice(0);
-		var p = this.path.splice(0);
-		var a = new animateMaze( mz, p );
-		anim.push( a );
+		return p;
 	}
+
+
+
 
 	// assumes keys from a processing instance have been moved to the global
 	//  namespace
@@ -308,8 +197,16 @@ function Maze(squareSize)
 			}	
 		}
 
-		//If the path has been created, draw it.
-		if( this.path != undefined && this.path.length != 0 ){
+		//If start has been assigned and no path created, create and draw it
+		if( this.startAssigned ){
+			if( this.getDist( this.start[0], this.start[1]) != -1 ){
+				this.path = this.createPath();
+				this.startAssigned = false;
+				this.drawPath( processing );
+
+				console.log( this.path.length );
+			}
+		} else { //If a path has already been created, draw it
 			this.drawPath( processing );
 		}
 
@@ -321,19 +218,34 @@ function Maze(squareSize)
 		var sy = y * this.squareSize; 
 
 		if(this.isWall(x, y)) {
-			processing.fill(13, 112, 22);
-		} else if( this.isStart(x, y)){
-			processing.fill(237, 221, 29);
-		} else if( this.isGoal( x, y)){
-			processing.fill(22, 117, 168);
-		} else {
-			processing.fill(255, 255, 255);
-		}
-		processing.rect(sx, sy, this.squareSize, this.squareSize);
 
-		if( this.getDist( x, y) != -1 ){
-			this.drawDistance( processing, x, y );
+			processing.color(0, 100, 0);
+			processing.fill(0, 100, 0);
+			processing.rect(sx, sy, this.squareSize, this.squareSize);
+	
+			// processing.textSize(this.squareSize / 2);
+			// processing.textAlign(CENTER, CENTER);
+
+			// processing.text(1, (sx + this.squareSize / 2), (sy + this.squareSize / 2)) ;
+		} else if( this.isStart(x, y)){
+			processing.color(0, 100, 0);
+			processing.fill(255, 150, 150);
+			processing.rect(sx, sy, this.squareSize, this.squareSize);
+
+		} else if( this.isGoal( x, y)){
+			processing.color(0, 100, 0);
+			processing.fill(150, 190, 255);
+			processing.rect(sx, sy, this.squareSize, this.squareSize);
+		} else {
+			processing.color(0, 0, 0);
+			processing.fill(255, 255, 255);
+			processing.rect(sx, sy, this.squareSize, this.squareSize);
+
 		}
+
+		//if( this.getDist( x, y) != -1 ){
+			this.drawDistance( processing, x, y );
+		//}
 	}
 
 	this.drawPath = function( processing ){
@@ -342,7 +254,8 @@ function Maze(squareSize)
 			var y = this.path[i][1];
 			var sx = x * this.squareSize;
 			var sy = y * this.squareSize;
-			processing.fill(242, 126, 32);
+			processing.color(0, 100, 0);
+			processing.fill(0, 255, 0);
 			processing.rect(sx, sy, this.squareSize, this.squareSize);
 
 			this.drawDistance( processing, x, y);
@@ -350,8 +263,8 @@ function Maze(squareSize)
 	}
 
 	this.drawDistance = function( processing, x, y ){
-		var sx = x * this.squareSize + Math.trunc( this.squareSize/2 ) ;
-		var sy = y * this.squareSize + Math.trunc( this.squareSize/2 ); 
+		var sx = x * this.squareSize + this.squareSize/2;
+		var sy = y * this.squareSize + this.squareSize/2; 
 		//Draw distance
 
 		//processing.textSize(15);
@@ -364,20 +277,15 @@ function Maze(squareSize)
 
 }
 
-function animateMaze( d, p){
-	this.dist = d;
-	this.path = p;
-}
-
 function sketchMaze(processing) {
+
 
 	console.log("Processing initialized");
 
 	processing.size(300, 300);
 	processing.background(10, 200, 10);
 
-	var squareSize = Math.trunc(300/8);
-	console.log( squareSize );
+	var squareSize = 300/8;
 
  	maze = new Maze(squareSize);
 
@@ -399,26 +307,8 @@ function sketchMaze(processing) {
   		maze.updateDist( x, y);
   	}
 
-  	processing.keyPressed = function( ){
-  		var value = processing.key.code;
-  		var animation = new Array();
-
-  		//Run BFS only if 'b' is pressed.
-  		if( value == 98 ){
-  			maze.assignDist();
-  			maze.createPath();
-
-  			// maze.assignAnimationDist( animation );
-  			// maze.createAnimationPath( animation );
-
-  			// console.log( "ANIMATION "+ animation.length );
-  		}
-
-  		//If 'r' is pressed, restart the search board
-  		if( value == 114 ){
-  			maze.resetPath();
-  			maze.resetDist();
-  		}
+  	processing.keyPressed = function(){
+  		maze.assignDist();
   	}
 
 	console.log("draw overridden");
