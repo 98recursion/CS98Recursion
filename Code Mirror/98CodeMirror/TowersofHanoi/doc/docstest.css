@@ -4,10 +4,14 @@
   font-weight: 400;
   src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
 }
-
-body, html { margin: 0; padding: 0; height: 100%; }
+*/
+body, html { margin: 0; 
+padding: 0; 
+height: 100%; 
+overflow: scroll;
+}
 section, article { display: block; padding: 0; }
-
+/*
 p { margin-top: 0; }
 
 h2, h3 {
@@ -215,6 +219,7 @@ body {
 	  font-family: Lucida Grande, Lucida Sans, Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
 	  font-size: 11px; font-weight: normal; text-decoration: none;
 		  line-height: 1.5em;
+	overflow: hidden;
 	}
 	a img { 
 		border: 0px solid transparent;
@@ -223,10 +228,10 @@ body {
 		color: #cdcdcd; text-decoration: underline;
 	}
 	
-	.center{
+	/*.center{
 	margin:auto;
 	width:70%;
-	}
+	}*/
 
 h1 {
 	    font-family: Comic Sans MS, cursive, Arial, Helvetica Neue, Verdana, Geneva, sans-serif;
@@ -234,22 +239,23 @@ h1 {
         font-size: 4em;
 		background-color: #024E68;
         width: 78%;
-    	height: 8%;
-    	position: fixed;
-             left: 3.3em;
+    	height: 100%;
+    	position: relative;
+		margin: auto;
+            
     
 	}
 
 .header{
-	top: -.7em;
+	top: 0em;
     text-align: center;
-    padding-top: 2%;
+    padding-top: 100%;
     
 	}
 
 .footer{
 	   height: 7%;
-	   top: 15em;
+	   top: 0em;
 	}
 canvas {
 		display: block; 
@@ -374,6 +380,7 @@ button:hover{
     padding: .5em;
     border-style:solid;
     border-color:#028E9B;
+    overflow: hidden;
     }
 
     #tohBox{
