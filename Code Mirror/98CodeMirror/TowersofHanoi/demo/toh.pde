@@ -45,14 +45,13 @@ float xOffset = 0.0;
 float yOffset = 0.0;
 
 void setTotalDiscs(int total) {
-  
   total_discs = total;
   
   if (total_discs <= 0) {
-    report.add("Error: Disc total is too small. Total number of discs must be between 1 and "+MAX_DISCS+".");
+    report.add("Error: Disc total is too small. Total number of discs must be between 1 and "+MAX_DISCS+".\n");
     total_discs = 1;
   } else if (total_discs > MAX_DISCS) {
-    report.add("Error: Disc total is too large. Total number of discs must be between 1 and "+MAX_DISCS+".");
+    report.add("Error: Disc total is too large. Total number of discs must be between 1 and "+MAX_DISCS+".\n");
     total_discs = MAX_DISCS;
   } else {
     total_discs = total;
@@ -81,6 +80,13 @@ void setTotalDiscs(int total) {
     //println(peg[0].discs);   
     //println("top_index: "+ peg[0].top_index);
   }
+}
+
+void resetTotalDiscs(){
+  if (total_discs >= 0){
+    setTotalDiscs(total_discs);
+  } else{
+    report.add("Error: Total discs must be greater than 0.")}
 }
 
 void increaseTotalDiscs() {
@@ -210,7 +216,8 @@ color inHandColor() {
     return color(DISC_WRONG); //red
 }
 
-//temp: trigger autoiterate once after keypressed
+/*
+//temp
 void keyPressed() {
   if (!mousePressed) { //else clones inHand
 
@@ -219,7 +226,7 @@ void keyPressed() {
       solve_hanoi(total_discs, 1, 3);
     }
     else if ((key == 'r' || key == 'R') ) {
-      setTotalDiscs(total_discs);
+      resetTotalDiscs();
     }
 
     else if (key == '-' || key == '_' ) {
@@ -256,7 +263,7 @@ void keyPressed() {
     }
   }
 }
-
+*/
 void mousePressed() {
   Peg currPeg = null;
   if (overPeg1()) {

@@ -12,12 +12,10 @@
 
 		////////////// Graphical Output  /////////////////
   		var processingInstance;
-		var first_call;
-		
+		var total_discs; //required to let typed code update the sketch
 		
 		// print error messages
 		var bound = false;
-		var processingInstance;
 		var pjs;
 
 		function bindJavascript() {
@@ -87,8 +85,7 @@
   			}
 			processingInstance.reset_queue();
 			clearOutput();
-  			increaseTotalDiscs();
-			decreaseTotalDiscs();
+			resetDiscs();
 		}
 		
 		function debug(){
@@ -196,6 +193,7 @@
 			reset();
 			var content = editor.getValue();		
 			var result = eval(content);
+			processingInstance.setTotalDiscs(totalDiscs);
 			printResult();
 		}
 		
