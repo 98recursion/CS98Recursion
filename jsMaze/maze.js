@@ -44,7 +44,7 @@ function Maze(squareSize)
 						[ 1, 0],
 						[ 0,-1],
 						[ 0, 1]
-					]
+					];
 
 	// this.start = new Array( 5, 0);
 	// this.goal = new Array ( 5, 5);
