@@ -263,8 +263,8 @@ function Maze(squareSize)
 	}
 
 	this.drawDistance = function( processing, x, y ){
-		var sx = x * this.squareSize + Math.trunc( this.squareSize/2 ) ;
-		var sy = y * this.squareSize + Math.trunc( this.squareSize/2 ); 
+		var sx = x * this.squareSize + (~~( this.squareSize/2 )) ;
+		var sy = y * this.squareSize + (~~( this.squareSize/2 )) ; 
 		//Draw distance
 
 		//processing.textSize(15);
@@ -284,7 +284,7 @@ function sketchMaze(processing) {
 	processing.size(300, 300);
 	processing.background(10, 200, 10);
 
-	var squareSize = Math.trunc(300/8);
+	var squareSize = (~~(300/8));
 	console.log( squareSize );
 
 	maze = new Maze(squareSize);
@@ -299,10 +299,10 @@ function sketchMaze(processing) {
 	processing.mousePressed = function() {
 		//processing.textSize(12);
 		//processing.text( processing.mouseX + " " + processing.mouseY, processing.mouseX, processing.mouseY );
-		//console.log( Math.trunc(processing.mouseX / maze.squareSize)+ " " +processing.mouseY / maze.squareSize);
+		//console.log( (~~(processing.mouseX / maze.squareSize))+ " " +processing.mouseY / maze.squareSize);
 
-		var x = Math.trunc(processing.mouseX / maze.squareSize);
-		var y = Math.trunc(processing.mouseY / maze.squareSize);
+		var x = (~~(processing.mouseX / maze.squareSize));
+		var y = (~~(processing.mouseY / maze.squareSize));
 
 		maze.updateDist( x, y);
 	}
