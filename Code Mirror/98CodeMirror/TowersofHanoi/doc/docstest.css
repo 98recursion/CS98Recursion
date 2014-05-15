@@ -5,9 +5,13 @@
   src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
 }
 */
-body, html { margin: 0; 
+html { 
+margin: 0; 
 padding: 0; 
 height: 100%; 
+width: 100%;
+background-color:#FFF; /*#333; */
+color: #bbb;
 overflow: scroll;
 }
 section, article { display: block; padding: 0; }
@@ -238,9 +242,8 @@ h1 {
 		letter-spacing: 0.1em;
         font-size: 4em;
 		background-color: #024E68;
-        width: 78%;
-    	height: 100%;
-    	position: relative;
+        width: 26.18em;
+    	position: absolute;
 		margin: auto;
             
     
@@ -249,13 +252,17 @@ h1 {
 .header{
 	top: 0em;
     text-align: center;
-    padding-top: 100%;
+    left: 3.27em;
+    height: 2em;
+    
     
 	}
 
 .footer{
-	   height: 7%;
-	   top: 0em;
+	   
+	   top:15.71em;
+       left: 3.27em;
+       height: 1.3em;
 	}
 canvas {
 		display: block; 
@@ -265,8 +272,8 @@ canvas {
 		margin-bottom: 1em; 
 		overflow: auto;
 		background-color: #3d3d3d;
-		position: fixed;
-		top: 11em;
+		/*position: fixed;
+		top: 11em;*/
 	}
 
 
@@ -284,7 +291,7 @@ canvas {
 		overflow-y: scroll;
 		background-color: white;
 		position: fixed;
-		//top: 41em;
+		top: 41em;
 		left:28.15em;
 	}
 	
@@ -372,11 +379,11 @@ button:hover{
     background: -webkit-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Safari 5.1 to 6.0 */
 	background: -moz-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#4B4B4B, #242121, #4B4B4B); /* Standard syntax (must be last) */
-    width:36%;
-    height:56%;
-    position: fixed;
-    left:13.2em;
-    top: 7.8em;
+    width: 48.5em;
+    height: 37.4em; 
+    position: absolute;
+    left:13.1em;
+    top: 8.01em;
     padding: .5em;
     border-style:solid;
     border-color:#028E9B;
@@ -388,11 +395,11 @@ button:hover{
     background: -webkit-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Safari 5.1 to 6.0 */
 	background: -moz-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#4B4B4B, #242121, #4B4B4B); /* Standard syntax (must be last) */
-    width:40.25%;
-    height:56%;
-    position: fixed;
-    right:14.5em;
-    top: 7.8em;
+    width:53.05em;
+    height:37.4em;;
+    position: absolute;
+    left:63.2em;
+    top: 8.01em;
     padding: .5em;
     border-style:solid;
     border-color:#028E9B;
@@ -404,10 +411,10 @@ button:hover{
 	/*background: -moz-linear-gradient(#4B4B4B, #242121, #4B4B4B); /* For Firefox 3.6 to 15 */
     /*background: linear-gradient(#4B4B4B, #242121, #4B4B4B); /* Standard syntax (must be last) */
     background: #BBB;
-    width:76.75%;
-    height:21%;
-    position: fixed;
-    right:14.5em;
+    width: 103.15em;
+    height:14.25em;
+    position: absolute;
+    left:13.1em;
     top: 47em;
     padding: .5em;
     border-style:solid;
