@@ -54,11 +54,11 @@
 function solveBoard(row) {	
 
   // *base case* if queens are sucessfully placed on all rows
-  if ( row >= getNumRows() )
+  if ( row >= numRows() )
     return true;
   
   // at this row, consider each column on the board
-  for (var i = 0; i < getNumCols(); i++) {
+  for (var i = 0; i < numCols(); i++) {
     
     // try to place a queen at [row, i]
     if ( isMoveValid(row, i) ) {

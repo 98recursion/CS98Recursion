@@ -88,20 +88,20 @@ var editor = CodeMirror.fromTextArea(document.getElementById("codeInputPane"), {
 			return processingInstance.isBoardSolved();
 		}
 
-		function getNumCols() {
+		function numCols() {
 			if (!processingInstance) {
 				processingInstance = Processing.getInstanceById('sketch');
 			}
 
-			return processingInstance.getNumCols();
+			return processingInstance.numCols();
 		}
 
-		function getNumRows() {
+		function numRows() {
 			if (!processingInstance) {
 				processingInstance = Processing.getInstanceById('sketch');
 			}
 
-			return processingInstance.getNumRows();
+			return processingInstance.numRows();
 		}
 
 
