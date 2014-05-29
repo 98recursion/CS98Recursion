@@ -10,8 +10,8 @@
 // anything and also allow them to stop by pressing a again
 // DONE 9. make debug queue for user code
 // 10. Change all queens in error with each other to be red,
-// not just the most recently placed one
-// 11. Potentially: only allow one square to be red at once
+// not just the most recently placed one (in semantic debugging)
+// DISCARD 11. Potentially: only allow one square to be red at once
 // (like when a user clicks in an invalid square)
 // 12. have the queen light up with the square that was invalid
 // where the user clicked
@@ -147,10 +147,10 @@ void draw() {
         if (millis() > time + 500 ) {
           board[i][j] = 0;
         }
+      
+      } else if (board[i][j] == -2) {
+        shape(queen_img_red, x + side/4, y, side/2, side);
       }
-//      } else if (board[i][j] == -2) {
-//        shape(queen_img_red, x + side/4, y, side/2, side);
-//      }
     }
   }
 }
@@ -320,7 +320,8 @@ void handleMove(int row, int col) {
   
   } else {
     board[row][col] = 0;
-    is_board_solved = false;
+    checkBoardValid();
+    is_board_solved = isBoardSolved();
   }
    
 }
@@ -328,7 +329,7 @@ void handleMove(int row, int col) {
 boolean isMoveValid(int row, int col) {
   
   for (int i=0; i<rows; i++) {
-    if (board[i][col] == 1) {
+    if ( isQueen(i, col) ) {
       
       // send error message to user
       if (!isSpecialMode() && javascript != null) {
@@ -341,7 +342,7 @@ boolean isMoveValid(int row, int col) {
 //  println("row is empty");
   
   for (int j=0; j<cols; j++) {
-    if (board[row][j] == 1) {
+    if ( isQueen(row, j) ) {
       
       // send error message to user
       if (!isSpecialMode() && javascript != null) {
@@ -356,10 +357,10 @@ boolean isMoveValid(int row, int col) {
   int j = col;
   int i = row;
   while (i < rows && j < cols) {
-    if (board[i][j] == 1) {
+    if ( isQueen(i, j) ) {
       // send error message to user
       if (!isSpecialMode() && javascript != null) {
-        javascript.log_Processing_error("ERROR: You can't place a queen on the square [" + row + ", " + col + "]" + " because it's on the same diagonal as the queen on the square [" + row + ", " + col + "].");
+        javascript.log_Processing_error("ERROR: You can't place a queen on the square [" + row + ", " + col + "]" + " because it's on the same diagonal as the queen on the square [" + i + ", " + j + "].");
       }
       return false;
     }
@@ -370,7 +371,7 @@ boolean isMoveValid(int row, int col) {
   j = col;
   i = row;
   while (i >= 0 && j >=0) {
-    if (board[i][j] == 1) {
+    if ( isQueen(i, j) ) {
       // send error message to user
       if (!isSpecialMode() && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the square [" + row + ", " + col + "]" + " because it's on the same diagonal as the queen on square [" + i + ", " + j + "].");
@@ -384,7 +385,7 @@ boolean isMoveValid(int row, int col) {
   j = col;
   i = row;
   while (i < rows && j >=0) {
-    if (board[i][j] == 1) {
+    if ( isQueen(i, j) ) {
       // send error message to user
       if (!isSpecialMode() && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the square [" + row + ", " + col + "]" + " because it's on the same diagonal as the queen on square [" + i + ", " + j + "].");
@@ -398,7 +399,7 @@ boolean isMoveValid(int row, int col) {
   j = col;
   i = row;
   while (i >= 0 && j < cols) {
-    if (board[i][j] == 1) {
+    if ( isQueen(i, j) ) {
       // send error message to user
       if (!isSpecialMode() && javascript != null) {
         javascript.log_Processing_error("ERROR: You can't place a queen on the square [" + row + ", " + col + "]" + " because it's on the same diagonal as the queen on square [" + i + ", " + j + "].");
@@ -629,16 +630,17 @@ void stepForward() {
 }
 
 void stepBack() {
-  if (curr_step > 0) {
+  if (curr_step >= 0) {
     DebugFrame debug_frame = debug_queue.get(curr_step);
     toggleQueen(debug_frame.row, debug_frame.col, !debug_frame.is_removal);
     curr_step = curr_step - 1;
   
-  } else if (curr_step == 0) {
-    DebugFrame debug_frame = debug_queue.get(curr_step);
-    toggleQueen(debug_frame.row, debug_frame.col, !debug_frame.is_removal);
-    curr_step = curr_step - 1;
-  }
+  } 
+//  else if (curr_step == 0) {
+//    DebugFrame debug_frame = debug_queue.get(curr_step);
+//    toggleQueen(debug_frame.row, debug_frame.col, !debug_frame.is_removal);
+//    curr_step = curr_step - 1;
+//  }
   
 }
 
@@ -713,6 +715,8 @@ void placeQueen(int row, int col) {
       addDebugFrame(row, col, false);
     }
     
+    checkBoardValid();
+    
   } else {
     if (javascript != null) {
       javascript.log_Processing_error("ERROR: There's already a queen on the square [" + row + ", " + col + "].");
@@ -732,6 +736,8 @@ void removeQueen(int row, int col) {
     if (is_run_mode) {
       addDebugFrame(row, col, true);
     }
+    
+    checkBoardValid();
     
   } else {
     if (javascript != null) {
@@ -758,6 +764,25 @@ int numRows() {
 }
 
 //////////////// - END USER CODE INTERFACE - ////////////////
+
+/////////////// - OTHER CODE FOR USER INTERFACE - ////////////////
+
+
+void checkBoardValid() {
+  for (int i=1; i<rows; i++) {
+    for (int j=1; j<cols; j++) {
+      
+      if ( board[i][j] == 1 && !isMoveValid(i, j) ) {
+        board[i][j] = -2;
+      } 
+      
+      else if ( board[i][j] == -2 && isMoveValid(i, j) ) {
+        board[i][j] = 1;
+      }
+    
+    }
+  }
+}
 
 // step_forward
 // step_back
