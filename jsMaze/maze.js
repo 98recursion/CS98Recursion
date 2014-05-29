@@ -3,7 +3,8 @@
 //   squareSize:  the width/height in pixels of each square of the maze
 function Maze(squareSize)
 {
-	//Squaresize must be an even number for square edges to work.  Thus, substract the mod 2 from the squaresize total
+	//Squaresize must be an even number for square edges to work.  Thus, substract the mod 2 from the 
+	//squaresize total
 	this.squareSize = squareSize - ( squareSize % 2);
 	console.log( "SQUARE SIZE " + this.squareSize);
 
@@ -37,6 +38,17 @@ function Maze(squareSize)
 							-1, -1, -1, -1, -1, -1, -1, -1
 						);
 
+	//Initialize this to -1's but will be updated at the end of the file for bfs and then never changed.
+	this.bfs = new Array(	-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1,
+							-1, -1, -1, -1, -1, -1, -1, -1
+						);
+
 	this.width = 8;
 	this.height = 8; 
 
@@ -53,7 +65,10 @@ function Maze(squareSize)
 	this.goal = new Array ( 5, 0);
 
 	this.path;
-	this.animation;
+
+	this.distCounters;
+
+	// ----- Methods controlling access to internal structures -----
 
 	this.isWall = function(x, y) {
 		var wallIndex = y * this.width + x;
@@ -76,6 +91,23 @@ function Maze(squareSize)
 		this.path = new Array();
 	}
 
+	this.getBFS = function(x, y){
+		var wallIndex = y * this.width + x;
+		return this.bfs[wallIndex];
+	}
+
+	this.setBFS = function(x, y, d){
+		var wallIndex = y * this.width + x;
+		return this.bfs[wallIndex] = d;
+	}
+
+	this.resetBFS = function(){
+		this.bfs = new Array( this.height * this.width );
+		for (var i = 0; i < this.dist.length; i++) {
+			this.bfs[i] = -1;
+		};
+	}
+
 	this.resetDist = function(){
 		this.dist = new Array( this.height * this.width );
 		for (var i = 0; i < this.dist.length; i++) {
@@ -94,29 +126,50 @@ function Maze(squareSize)
 	}
 
 
+
+
+	// ----- Methods for updating the distance in response to a mouse click -----
+
 	this.updateDist = function( x, y){
 		//Dont update this if the square is a wall
 		if( this.isWall( x, y )){
 			return;
 		}
 
+		//Don't reassign if it already has been.
+		if( this.getDist( x, y ) !== -1 ) {
+			return;
+		}
+
 		//If the goal, the distance is 0
 		if( this.isGoal( x, y )){
+			this.currentDistance( 0 );
 			var wallIndex = y * this.width + x;
 			this.dist[wallIndex] = 0;
 			return;
 		}
-		//If surrounded by unassigned squares, you cannot assign the square, else, the number shold take the lowest possibility
+
 		var newAss = this.isAssignable(x,y);
+
+		//If the square is assigned, check to see if it is of the layer currently being explored.  If it 
+		//is assign it, if not dont.
 		if( newAss != -1 ) {
-			var wallIndex = y * this.width + x;
-			this.dist[wallIndex] = newAss;
+			if( this.currentDistance( newAss ) ){
+				this.setDist( x, y, newAss );
+
+				//If the start was the location which was just assigned, create a path.
+				if ( this.isStart( x, y ) ){
+					this.createPath();
+				}
+			}
+
 		}
 
 
 	}
 	
-	//Loop through the adjacent squares, if any of them are assigned return the incremented value of the lowest one
+	//Loop through the adjacent squares, if any of them are assigned return the incremented value of 
+	//the lowest one
 	this.isAssignable = function(x,y) {
 		var assgn = -1;
 		for (var i = 0; i < this.adjacency.length; i++) {
@@ -133,14 +186,89 @@ function Maze(squareSize)
 		return assgn;
 	}
 
-	this.assignDist = function(){
+	//Check to see if the current distance found is part of the layer being explored.  If it is, decrement the 
+	//tally and return true, if not return false.
+	this.currentDistance = function( value ){
+		//Check to see appropriate distance by looking at the sum of the inex one lower than value.
+		if( ( value === 0 ) || ((value > 0) && ( this.distCounters[ value - 1 ] === 0 ) )){
+			console.log( "true.......wtf");
+			this.distCounters[value]--;
+			console.log( this.distCounters );
+			return true;
+		}
+		return false;
+	}
 
-		//Reset the distances
-		this.resetDist();
+	//This method is called when the class is being initialized and SHOULD NEVER BE CALLED AGAIN
+	this.internalBFSTracking = function(){
+		this.resetBFS();
+
+		//Array of counters.  At each index is the number of times the value of the index is found in 
+		//the BFS exploration.
+		var counters = new Array();
+		counters[0] = 0;
 
 		//queue holding squares to search
 		var queue = new Array();
 		
+		//Set the distance of the goal as zero and add the goal to the queue
+		this.setBFS( this.goal[0], this.goal[1], 0 );
+		queue.push( this.goal );
+		this.incrementCounter( counters, 0 );
+
+
+		//Continue searching until the queue is empty or the start has been found.
+		while( queue.length != 0 ){
+			//Pop the first element from the queue
+			var arr = queue[0];
+			queue.splice( 0, 1);
+
+			var value = this.getBFS(arr[0], arr[1]) + 1;
+
+
+
+			//Check each of the elements next to the current one and add dist and to the queue if it 
+			//is valid. A valid move happens if it is in the maze, not a wall, and not already labled
+			for (var i = 0; i < this.adjacency.length; i++) {
+				var adj = this.adjacency[i];
+				var temp = [ (arr[0] + adj[0]), (arr[1] + adj[1]) ];
+				if( this.isValidBFSMove( temp[0], temp[1] ) ){
+					this.setBFS(temp[0], temp[1], value);
+					queue.push( temp );
+					this.incrementCounter( counters, value );
+				}
+			}
+		}
+		this.distCounters = counters;
+		console.log( this.distCounters );
+
+	}
+
+	this.isValidBFSMove = function(x, y){
+		//See if in bounds, valid location, or already assigned in the current BFS
+		return !( (! this.isSquare(x, y)) || ( this.isWall(x,y) == 1 ) || ( this.getBFS(x, y) != -1 ) );
+	}
+
+	this.incrementCounter = function ( counter, index ){
+		//Make sure the array is long enough
+		if( counter.length < index + 1 ){
+			counter.length = index + 1;
+			counter[index] = 0;
+		}
+		counter[index] = counter[index] + 1; 
+	}
+
+
+
+
+	// ----- Methods for updating all the distances in response to a key or button click -----
+
+	this.assignDist = function(){
+
+		//Reset the distances
+		this.resetDist();
+		//queue holding squares to search
+		var queue = new Array();
 		//Set the distance of the goal as zero and add the goal to the queue
 		this.setDist( this.goal[0], this.goal[1], 0 );
 		queue.push( this.goal );
@@ -150,10 +278,7 @@ function Maze(squareSize)
 			//Pop the first element from the queue
 			var arr = queue[0];
 			queue.splice( 0, 1);
-
 			var value = this.getDist(arr[0], arr[1]) + 1;
-
-
 
 			//Check each of the elements next to the current one and add dist and to the queue if it is valid
 			//A valid move happens if it is in the maze, not a wall, and not already labled
@@ -164,7 +289,10 @@ function Maze(squareSize)
 					this.setDist(temp[0], temp[1], value);
 					queue.push( temp );
 
+					this.currentDistance( value ); //Decriment the counter.
+
 					if( this.isStart( temp[0], temp[1]) ){
+						console.log( this.distCounters );
 						return;
 					}
 				}
@@ -172,10 +300,12 @@ function Maze(squareSize)
 		}
 	}
 
-	this.isValidMove = function(x, y, newDist){
+	this.isValidMove = function(x, y){
 		//See if in bounds, valid location, or already assigned in the current BFS
 		return !( (! this.isSquare(x, y)) || ( this.isWall(x,y) == 1 ) || ( this.getDist(x, y) != -1 ) );
 	}
+
+
 
 	//Create an array with the path from the start to the goal.
 	this.createPath = function(){
@@ -188,7 +318,8 @@ function Maze(squareSize)
 			tempVal = this.getDist( temp[0], temp[1]);
 			//console.log( "tempVAl "+ tempVal);
 
-			//Loop through the adjacent locations and look for one with a lower distance, add it to the array and break
+			//Loop through the adjacent locations and look for one with a lower distance, add it to the 
+			//array and break
 			for (var i = 0; i < this.adjacency.length; i++) {
 				var xTemp = temp[0] + this.adjacency[i][0];
 				var yTemp = temp[1] + this.adjacency[i][1];
@@ -207,6 +338,12 @@ function Maze(squareSize)
 
 		}
 	}
+
+
+
+
+
+	// ----- Methods for drawing graphics -----
 
 	// assumes keys from a processing instance have been moved to the global
 	//  namespace
@@ -275,6 +412,15 @@ function Maze(squareSize)
 	}
 
 
+
+
+
+	// ----- call during initialization -----
+	//This is to control clicking accessibility so it functions like a true BFS.  This function will 
+	//never be called again.
+	this.internalBFSTracking();
+
+
 }
 
 function sketchMaze(processing) {
@@ -320,6 +466,7 @@ function sketchMaze(processing) {
 		if( value == 114 ){
 			maze.resetPath();
 			maze.resetDist();
+			maze.internalBFSTracking();
 		}
 	}
 
